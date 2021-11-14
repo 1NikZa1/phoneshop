@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 public class JdbcPhoneDao implements PhoneDao {
     private static final String PHONE_BY_ID = "SELECT phones.*, colors.id AS colorId, colors.code AS colorCode " +
             "FROM phones " +
-            "INNER JOIN phone2color ON phone2color.phoneId = phones.id " +
-            "INNER JOIN colors ON colors.id = phone2color.colorId " +
+            "LEFT JOIN phone2color ON phone2color.phoneId = phones.id " +
+            "LEFT JOIN colors ON colors.id = phone2color.colorId " +
             "WHERE phones.id = ?";
     private static final String INSERT_PHONE = "INSERT INTO phones (id, brand, model, price, displaySizeInches, " +
             "weightGr, lengthMm, widthMm, heightMm, announced, deviceType, os, displayResolution, pixelDensity, " +
