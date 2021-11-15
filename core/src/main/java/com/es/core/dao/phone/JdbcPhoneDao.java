@@ -2,7 +2,6 @@ package com.es.core.dao.phone;
 
 import com.es.core.model.phone.Color;
 import com.es.core.model.phone.Phone;
-import com.es.core.model.phone.PhoneResultSetExtractor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -101,6 +100,8 @@ public class JdbcPhoneDao implements PhoneDao {
     }
 
     public List<Phone> findAll(int offset, int limit) {
+        if (offset < 0 || limit < 0) throw new IllegalArgumentException();
+
         List<Phone> phones = jdbcTemplate.query(FIND_ALL_PHONES, new BeanPropertyRowMapper(Phone.class), offset, limit);
         phones.forEach(this::setColors);
         return phones;

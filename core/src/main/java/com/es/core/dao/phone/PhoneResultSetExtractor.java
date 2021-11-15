@@ -1,5 +1,7 @@
-package com.es.core.model.phone;
+package com.es.core.dao.phone;
 
+import com.es.core.model.phone.Color;
+import com.es.core.model.phone.Phone;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
@@ -12,17 +14,19 @@ public class PhoneResultSetExtractor implements ResultSetExtractor<Phone> {
         Phone phone = new Phone();
 
         while (resultSet.next()) {
-            if(resultSet.isFirst()) {
+            if (resultSet.isFirst()) {
                 setPhoneProps(phone, resultSet);
             }
-            phone.getColors().add(
-                    new Color(resultSet.getLong("colorId"), resultSet.getString("colorCode")));
+            if (resultSet.getLong("colorId") != 0) {
+                phone.getColors().add(
+                        new Color(resultSet.getLong("colorId"), resultSet.getString("colorCode")));
+            }
         }
 
         return phone;
     }
 
-    private void setPhoneProps(Phone phone,ResultSet resultSet) throws SQLException{
+    private void setPhoneProps(Phone phone, ResultSet resultSet) throws SQLException {
         phone.setId(resultSet.getLong("id"));
         phone.setBrand(resultSet.getString("brand"));
         phone.setModel(resultSet.getString("model"));
