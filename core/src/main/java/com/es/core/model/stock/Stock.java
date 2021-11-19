@@ -1,9 +1,14 @@
-package com.es.core.model.phone;
+package com.es.core.model.stock;
+
+import com.es.core.model.phone.Phone;
 
 public class Stock {
     private Phone phone;
     private Integer stock;
     private Integer reserved;
+
+    public Stock() {
+    }
 
     public Phone getPhone() {
         return phone;
@@ -13,19 +18,19 @@ public class Stock {
         this.phone = phone;
     }
 
-    public Integer getStock() {
+    public int getStock() {
         return stock;
     }
 
-    public void setStock(Integer stock) {
+    public void setStock(int stock) {
         this.stock = stock;
     }
 
-    public Integer getReserved() {
+    public int getReserved() {
         return reserved;
     }
 
-    public void setReserved(Integer reserved) {
+    public void setReserved(int reserved) {
         this.reserved = reserved;
     }
 }

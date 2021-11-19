@@ -1,12 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="input" uri="http://www.springframework.org/tags/form" %>
 
 <tags:template>
+    <title>Product list</title>
     <div class="container">
-        <tags:header cartItems="${cartTotalQuantity}" subtotalPrice="${subtotalPrice}"/>
+        <tags:header cartTotalQuantity="${cart.totalQuantity}" totalPrice="${cart.totalCost}"/>
         <hr class="my-2">
-
         <div class="clearfix">
             <h2 class="float-start">Phones</h2>
             <form action="${pageContext.request.contextPath}/productList" class="float-end">
@@ -63,12 +64,16 @@
                             </c:forEach>
                         </td>
                         <td>${phone.displaySizeInches}"</td>
-                        <td>$ ${phone.price}</td>
+                        <td>$ <span id="phone${phone.id}Price">${phone.price}</span></td>
                         <td>
                             <input id="phone${phone.id}Quantity" class="form-check-inline" value="1">
+                            <input type="hidden" id="phone${phone.id}Id" value="${phone.id}">
+                            <p style="color: green" id="quantity${phone.id}Message"></p>
+                            <p style="color: red" id="quantity${phone.id}Error"></p>
+
                         </td>
                         <td>
-                            <button class="btn btn-dark">Add to</button>
+                            <button onclick="doAjaxPost(${phone.id})" class="btn btn-dark">Add</button>
                         </td>
                     </tr>
                 </c:forEach>
