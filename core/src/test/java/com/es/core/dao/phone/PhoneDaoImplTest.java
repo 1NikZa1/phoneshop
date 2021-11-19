@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 @ContextConfiguration("classpath:context/applicationContext-core-test.xml")
 @RunWith(SpringRunner.class)
 @Transactional
-public class JdbcPhoneDaoTest {
+public class PhoneDaoImplTest {
     @Resource
     private PhoneDao phoneDao;
 
