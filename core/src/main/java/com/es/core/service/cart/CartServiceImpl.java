@@ -17,12 +17,15 @@ import java.util.Optional;
 
 @Service
 public class CartServiceImpl implements CartService {
-    @Resource
     private PhoneDao phoneDao;
-    @Resource
     private Cart cart;
-    @Resource
     private StockDao stockDao;
+
+    public CartServiceImpl(PhoneDao phoneDao, Cart cart, StockDao stockDao) {
+        this.phoneDao = phoneDao;
+        this.cart = cart;
+        this.stockDao = stockDao;
+    }
 
     @Override
     public Cart getCart() {
@@ -48,17 +51,18 @@ public class CartServiceImpl implements CartService {
     }
 
     private void updateCartItemQuantity(Long phoneId, Long quantity) {
-
         cart.getItems().stream()
                 .filter(cartItem -> cartItem.getPhone().getId().equals(phoneId))
                 .findAny()
-                .ifPresent(cartItem -> {
-                    Optional<Stock> stockOptional = stockDao.get(cartItem.getPhone().getId());
-                    Integer stockQuantity = stockOptional.map(Stock::getStock).orElse(0);
-                    if (stockQuantity - quantity >= 0) {
-                        cartItem.setQuantity(quantity);
-                    }
-                });
+                .ifPresent(cartItem -> setCartItemQuantity(cartItem, quantity));
+    }
+
+    public void setCartItemQuantity(CartItem cartItem, Long quantity) {
+        Optional<Stock> stockOptional = stockDao.get(cartItem.getPhone().getId());
+        Integer stockQuantity = stockOptional.map(Stock::getStock).orElse(0);
+        if (stockQuantity - quantity >= 0) {
+            cartItem.setQuantity(quantity);
+        }
     }
 
     private void addCartItem(CartItem cartItem, Long quantity) {

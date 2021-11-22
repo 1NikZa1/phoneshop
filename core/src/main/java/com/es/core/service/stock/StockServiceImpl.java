@@ -12,16 +12,20 @@ import java.util.Optional;
 
 @Service
 public class StockServiceImpl implements StockService {
-    @Resource
     private StockDao stockDao;
-    @Resource
     private PhoneDao phoneDao;
+
+    public StockServiceImpl(StockDao stockDao, PhoneDao phoneDao) {
+        this.stockDao = stockDao;
+        this.phoneDao = phoneDao;
+    }
 
     @Override
     public Optional<Stock> getStock(Long phoneId) {
         Optional<Stock> stockOptional = stockDao.get(phoneId);
         if (stockOptional.isPresent()) {
-            Phone phone = phoneDao.get(stockOptional.get().getPhone().getId()).orElseThrow(NoSuchElementException::new);
+            Phone phone = phoneDao.get(stockOptional.get().getPhone().getId())
+                    .orElseThrow(NoSuchElementException::new);
             stockOptional.get().setPhone(phone);
         }
         return stockOptional;

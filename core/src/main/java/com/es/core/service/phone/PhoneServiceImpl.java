@@ -4,17 +4,21 @@ import com.es.core.dao.phone.PhoneDao;
 import com.es.core.model.phone.Phone;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 public class PhoneServiceImpl implements PhoneService {
-    @Resource
+
     private PhoneDao phoneDao;
 
+    public PhoneServiceImpl(PhoneDao phoneDao) {
+        this.phoneDao = phoneDao;
+    }
+
     @Override
-    public List<Phone> findPhones(String query, String sortField, String sortOrder, int pageNumber,int phonesPerPage) {
-        List<Phone> phones = phoneDao.findAll(query, (pageNumber - 1) * phonesPerPage, phonesPerPage);
+    public List<Phone> findPhones(String query, String sortField, String sortOrder, int pageNumber, int phonesPerPage) {
+        List<Phone> phones = phoneDao.findAll(query, sortField, sortOrder, (pageNumber - 1) * phonesPerPage, phonesPerPage);
 
         return sortPhones(sortField, sortOrder, phones);
     }

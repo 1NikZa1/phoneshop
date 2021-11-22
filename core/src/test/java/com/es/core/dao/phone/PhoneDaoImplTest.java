@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,17 +20,20 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @Transactional
 public class PhoneDaoImplTest {
+    private static final int dbSize = 5;
+
     @Resource
     private PhoneDao phoneDao;
 
     private Phone testPhone;
-    private static final int dbSize = 5;
 
     @Before
     public void setup() {
         testPhone = new Phone();
         testPhone.setBrand("Iphone");
         testPhone.setModel("6");
+        testPhone.setPrice(BigDecimal.valueOf(150));
+        testPhone.setId(10L);
     }
 
     @Test
@@ -42,7 +46,7 @@ public class PhoneDaoImplTest {
     }
 
     @Test
-    public void shouldGetNonexistingPhone() {
+    public void shouldGetNonexistentPhone() {
         Optional<Phone> phone = phoneDao.get(0L);
 
         assertFalse(phone.isPresent());
@@ -50,9 +54,13 @@ public class PhoneDaoImplTest {
 
     @Test
     public void shouldInsertPhoneWithoutColors() {
+        testPhone.setId(null);
+
+        assertFalse(phoneDao.get(testPhone.getId()).isPresent());
+
         phoneDao.save(testPhone);
 
-        assertEquals(phoneDao.findAll(0, 10).size(), dbSize + 1);
+        assertTrue(phoneDao.get(testPhone.getId()).isPresent());
     }
 
     @Test
@@ -67,8 +75,8 @@ public class PhoneDaoImplTest {
     @Test
     public void shouldUpdatePhoneWithColors() {
         Phone phone = phoneDao.get(1000L).get();
-        Color oldColor = new Color(1000L,"Black");
-        Color newColor = new Color(1001L,"White");
+        Color oldColor = new Color(1000L, "Black");
+        Color newColor = new Color(1001L, "White");
         phone.getColors().remove(oldColor);
         phone.getColors().add(newColor);
 
@@ -82,8 +90,6 @@ public class PhoneDaoImplTest {
     public void shouldFindAll() {
         List<Phone> phones = phoneDao.findAll(0, 2);
 
-        for (Phone phone : phones) {
-            assertFalse(phone.getColors().isEmpty());
-        }
+        assertEquals(2, phones.size());
     }
 }

@@ -3,13 +3,14 @@
 <%@ attribute name="page" required="true" %>
 
 <c:url value="/productList">
-    <c:if test="${not empty param.query}">
+    <c:if test="${not empty param.sort}">
         <c:param name="sort" value="${param.sort}"/>
     </c:if>
 
-    <c:if test="${not empty param.query}">
+    <c:if test="${not empty param.order}">
         <c:param name="order" value="${param.order}"/>
     </c:if>
+
     <c:param name="page" value="${page}"/>
     <c:if test="${not empty param.query}">
         <c:param name="query" value="${param.query}"/>

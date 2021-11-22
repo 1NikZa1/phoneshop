@@ -26,8 +26,8 @@ public class StockDaoImpl implements StockDao {
 
     @Override
     public Optional<Stock> get(Long phoneId) {
-        Stock stock = jdbcTemplate.queryForObject(STOCK_BY_PHONE_ID, new StockRowMapper(), phoneId);
-        if (stock.getPhone().getId() == null) {
+        Stock stock = jdbcTemplate.query(STOCK_BY_PHONE_ID, new StockResultSetExtractor(), phoneId);
+        if (stock.getPhone() == null) {
             return Optional.empty();
         }
         return Optional.of(stock);

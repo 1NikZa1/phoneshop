@@ -12,7 +12,7 @@ public interface PhoneDao {
 
     List<Phone> findAll(int offset, int limit);
 
-    List<Phone> findAll(String query, int offset, int limit);
+    List<Phone> findAll(String query, String sortField, String sortOrder, int offset, int limit);
 
     int countPhones(String query);
 }
