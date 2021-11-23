@@ -20,7 +20,7 @@
         </div>
 
         <div class="container">
-            <table class="table table-bordered table-striped table-sm">
+            <table class="table table-bordered table-striped table-sm table-hover">
                 <thead class="table-dark">
                 <tr>
                     <td>Image</td>
@@ -56,7 +56,12 @@
                                  src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
                         </td>
                         <td>${phone.brand}</td>
-                        <td>${phone.model}</td>
+                        <td>
+                            <a href="${pageContext.request.contextPath}/productDetails/${phone.id}">
+                                    ${phone.model}
+                            </a>
+                        </td>
+                        </td>
                         <td>
                             <c:forEach var="color" items="${phone.colors}" varStatus="colorLoop">
                                 ${color.code}
