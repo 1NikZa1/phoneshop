@@ -3,16 +3,15 @@ package com.es.core.service.cart;
 import com.es.core.dao.phone.PhoneDao;
 import com.es.core.dao.stock.StockDao;
 import com.es.core.exception.OutOfStockException;
+import com.es.core.exception.PhoneNotFoundException;
 import com.es.core.model.cart.Cart;
 import com.es.core.model.cart.CartItem;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.stock.Stock;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -34,7 +33,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void addPhone(Long phoneId, Long quantity) {
-        Phone phone = phoneDao.get(phoneId).orElseThrow(NoSuchElementException::new);
+        Phone phone = phoneDao.get(phoneId).orElseThrow(PhoneNotFoundException::new);
         Optional<CartItem> cartItemOptional = findCartItem(phoneId);
 
         if (cartItemOptional.isPresent()) {

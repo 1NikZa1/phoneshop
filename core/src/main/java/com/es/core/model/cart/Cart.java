@@ -11,8 +11,8 @@ import java.util.List;
 @SessionScope
 public class Cart {
     private List<CartItem> items = new ArrayList<>();
-    private Long totalQuantity;
-    private BigDecimal totalCost;
+    private Long totalQuantity = 0L;
+    private BigDecimal totalCost = BigDecimal.ZERO;
 
     public List<CartItem> getItems() {
         return items;
