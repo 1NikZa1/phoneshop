@@ -7,23 +7,34 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-public class PhoneResultSetExtractor implements ResultSetExtractor<Phone> {
+public class PhoneResultSetExtractor implements ResultSetExtractor<List<Phone>> {
     @Override
-    public Phone extractData(ResultSet resultSet) throws SQLException, DataAccessException {
-        Phone phone = new Phone();
+    public List<Phone> extractData(ResultSet rs) throws SQLException, DataAccessException {
+        List<Phone> phones = new ArrayList<>();
 
-        while (resultSet.next()) {
-            if (resultSet.isFirst()) {
-                setPhoneProps(phone, resultSet);
+        Phone phone = null;
+        Set<Color> colors = null;
+        while (rs.next()) {
+            if (phone == null || phone.getId() != rs.getLong("id")) {
+                phone = new Phone();
+                colors = new HashSet<>();
+                phone.setColors(colors);
+                phones.add(phone);
+                setPhoneProps(phone, rs);
             }
-            if (resultSet.getLong("colorId") != 0) {
-                phone.getColors().add(
-                        new Color(resultSet.getLong("colorId"), resultSet.getString("colorCode")));
+            Color color = new Color();
+            if (rs.getLong("colorId") != 0) {
+                color.setId(rs.getLong("colorId"));
+                color.setCode(rs.getString("colorCode"));
+                colors.add(color);
             }
         }
-
-        return phone;
+        return phones;
     }
 
     private void setPhoneProps(Phone phone, ResultSet resultSet) throws SQLException {

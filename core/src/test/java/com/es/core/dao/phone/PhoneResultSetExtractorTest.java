@@ -36,7 +36,7 @@ public class PhoneResultSetExtractorTest {
 
     @Test
     public void shouldExtractDataWithColors() {
-        phone = jdbcTemplate.query(PHONE_BY_ID, phoneResultSetExtractor, 1000L);
+        phone = jdbcTemplate.query(PHONE_BY_ID, phoneResultSetExtractor, 1000L).get(0);
         Color color = new Color(1000L, "Black");
 
         assertEquals("ARCHOS 101 G9", phone.getModel());
@@ -45,8 +45,8 @@ public class PhoneResultSetExtractorTest {
 
     @Test
     public void shouldExtractDataWithoutColors() {
-        phone = jdbcTemplate.query(PHONE_BY_ID, phoneResultSetExtractor, 1004L);
-
+        phone = jdbcTemplate.query(PHONE_BY_ID, phoneResultSetExtractor, 1004L).get(0);
+        System.out.println(phone.getColors());
         assertEquals(0, phone.getColors().size());
     }
 }

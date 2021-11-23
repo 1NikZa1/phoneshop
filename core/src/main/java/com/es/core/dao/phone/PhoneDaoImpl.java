@@ -12,14 +12,11 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
-public class JdbcPhoneDao implements PhoneDao {
+public class PhoneDaoImpl implements PhoneDao {
     private static final String PHONE_BY_ID = "SELECT phones.*, colors.id AS colorId, colors.code AS colorCode " +
             "FROM phones " +
             "LEFT JOIN phone2color ON phone2color.phoneId = phones.id " +
@@ -44,23 +41,43 @@ public class JdbcPhoneDao implements PhoneDao {
             "imageUrl = :imageUrl, description = :description where id = :id";
     private static final String INSERT_COLOR_FOR_PHONE_ID = "INSERT INTO phone2color (phoneId, colorId) VALUES (?,?)";
     private static final String DELETE_PHONE_COLORS = "DELETE FROM phone2color WHERE phoneId = ?";
-    private static final String FIND_ALL_PHONES = "SELECT * FROM phones OFFSET ? LIMIT ?";
-    private static final String FIND_COLOR = "SELECT id ,code " +
-            "FROM colors " +
-            "INNER JOIN phone2color ON colors.id = phone2color.colorId " +
-            "WHERE phone2color.phoneId = ?";
+    private static final String FIND_ALL_PHONES = "SELECT p.*, colors.id AS colorId, colors.code AS colorCode " +
+            "FROM ( SELECT * FROM phones " +
+            "INNER JOIN stocks ON phones.id = stocks.phoneId " +
+            "WHERE stocks.stock > 0 AND phones.price IS NOT NULL OFFSET ? LIMIT ? ) AS p " +
+            "LEFT JOIN phone2color ON phone2color.phoneId = p.id " +
+            "LEFT JOIN colors ON colors.id = phone2color.colorId";
+    private static final String FIND_ALL_ORDERED_PHONES_BY_QUERY = "SELECT p.*, colors.id AS colorId, colors.code AS colorCode " +
+            "FROM ( SELECT * FROM phones " +
+            "INNER JOIN stocks ON phones.id = stocks.phoneId " +
+            "WHERE stocks.stock > 0 AND phones.price IS NOT NULL " +
+            "AND (phones.brand ILIKE '%%%s%%' OR phones.model ILIKE '%%%s%%') " +
+            "ORDER BY phones.%s %s " +
+            "OFFSET ? LIMIT ? ) AS p " +
+            "LEFT JOIN phone2color ON phone2color.phoneId = p.id " +
+            "LEFT JOIN colors ON colors.id = phone2color.colorId ";
+    private static final String FIND_ALL_ORDERED_PHONES = "SELECT p.*, colors.id AS colorId, colors.code AS colorCode " +
+            "FROM ( SELECT * FROM phones " +
+            "INNER JOIN stocks ON phones.id = stocks.phoneId " +
+            "WHERE stocks.stock > 0 AND phones.price IS NOT NULL %s%s " +
+            "ORDER BY phones.%s %s " +
+            "OFFSET ? LIMIT ? ) AS p " +
+            "LEFT JOIN phone2color ON phone2color.phoneId = p.id " +
+            "LEFT JOIN colors ON colors.id = phone2color.colorId ";
 
     @Resource
     private JdbcTemplate jdbcTemplate;
     @Resource
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    @Resource
+    private BeanPropertyRowMapper<Phone> phoneBeanPropertyRowMapper;
 
     public Optional<Phone> get(final Long key) {
-        Phone phone = jdbcTemplate.query(PHONE_BY_ID, new PhoneResultSetExtractor(), key);
-        if (phone.getId() == null) {
+        List<Phone> phones = jdbcTemplate.query(PHONE_BY_ID, new PhoneResultSetExtractor(), key);
+        if (phones.size() == 0) {
             return Optional.empty();
         }
-        return Optional.of(phone);
+        return Optional.of(phones.get(0));
     }
 
     public void save(final Phone phone) {
@@ -100,16 +117,60 @@ public class JdbcPhoneDao implements PhoneDao {
     }
 
     public List<Phone> findAll(int offset, int limit) {
-        if (offset < 0 || limit < 0) throw new IllegalArgumentException();
-
-        List<Phone> phones = jdbcTemplate.query(FIND_ALL_PHONES, new BeanPropertyRowMapper(Phone.class), offset, limit);
-        phones.forEach(this::setColors);
-        return phones;
+        return jdbcTemplate.query(FIND_ALL_PHONES, phoneBeanPropertyRowMapper, offset, limit);
     }
 
-    private void setColors(final Phone phone) {
-        Long phoneId = phone.getId();
-        List<Color> colors = jdbcTemplate.query(FIND_COLOR, new BeanPropertyRowMapper(Color.class), phoneId);
-        phone.setColors(new HashSet<>(colors));
+    @Override
+    public List<Phone> findAll(String query, String sortField, String sortOrder, int offset, int limit) {
+        return jdbcTemplate.query(createSqlForSearch(query, sortField, sortOrder), new PhoneResultSetExtractor(), offset, limit);
+    }
+
+    private String createSqlForSearch(String query, String sortField, String sortOrder) {
+        if (sortOrder == null || !sortOrder.equals("desc")) {
+            sortOrder = "asc";
+        }
+
+        if (query == null || query.trim().isEmpty()) {
+            if (sortField == null || sortField.isEmpty())
+                return FIND_ALL_PHONES;
+            else
+                return createSqlForSorting(FIND_ALL_ORDERED_PHONES, "", sortField, sortOrder);
+        }
+
+        return createSqlForSorting(FIND_ALL_ORDERED_PHONES_BY_QUERY, query, sortField, sortOrder);
+    }
+
+    private String createSqlForSorting(String sql, String query, String sortField, String sortOrder) {
+        if (sortField == null) {
+            sortField = "id";
+        }
+        switch (sortField) {
+            case "displaySize":
+                return String.format(sql, query, query, "displaySizeInches", sortOrder);
+            case "brand":
+            case "price":
+            case "model":
+                return String.format(sql, query, query, sortField, sortOrder);
+            default:
+                return String.format(sql, query, query, "id", sortOrder);
+        }
+    }
+
+    @Override
+    public int countPhones(String query) {
+        return jdbcTemplate.queryForObject(createSqlForCountPhones(query), Integer.class);
+    }
+
+    private String createSqlForCountPhones(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return "SELECT COUNT(*) FROM phones " +
+                    "INNER JOIN stocks ON phones.id = stocks.phoneId " +
+                    "WHERE stocks.stock > 0 AND phones.price IS NOT NULL ";
+        }
+
+        return String.format("SELECT COUNT(*) FROM phones " +
+                "INNER JOIN stocks ON phones.id = stocks.phoneId " +
+                "WHERE stocks.stock > 0 AND phones.price IS NOT NULL " +
+                "AND (phones.brand ILIKE '%%%s%%' OR phones.model ILIKE '%%%s%%')", query, query);
     }
 }

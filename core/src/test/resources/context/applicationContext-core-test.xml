@@ -26,6 +26,25 @@
         <constructor-arg type="javax.sql.DataSource" ref="dataSource"/>
     </bean>
 
+    <bean id="phoneBeanPropertyRowMapper" class="org.springframework.jdbc.core.BeanPropertyRowMapper">
+        <constructor-arg value="com.es.core.model.phone.Phone"/>
+    </bean>
+
+    <bean id="phoneService" class="com.es.core.service.phone.PhoneServiceImpl">
+        <constructor-arg ref="phoneDaoImpl"/>
+    </bean>
+
+    <bean id="cartService" class="com.es.core.service.cart.CartServiceImpl">
+        <constructor-arg ref="phoneDaoImpl"/>
+        <constructor-arg ref="cart"/>
+        <constructor-arg ref="stockDaoImpl"/>
+    </bean>
+
+    <bean id="stockService" class="com.es.core.service.stock.StockServiceImpl">
+        <constructor-arg ref="stockDaoImpl"/>
+        <constructor-arg ref="phoneDaoImpl"/>
+    </bean>
+
     <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource" />
     </bean>
