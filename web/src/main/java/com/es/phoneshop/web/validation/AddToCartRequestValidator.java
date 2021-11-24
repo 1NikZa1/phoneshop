@@ -21,6 +21,7 @@ public class AddToCartRequestValidator implements Validator {
     public void validate(Object target, Errors e) {
         ValidationUtils.rejectIfEmpty(e, "quantity", QUANTITY_EMPTY_MESSAGE);
         ValidationUtils.rejectIfEmpty(e, "phoneId", PHONE_ID_EMPTY_MESSAGE);
+
         AddToCartRequest request = (AddToCartRequest) target;
         try {
             long quantity = Long.parseLong(request.getQuantity().trim());
