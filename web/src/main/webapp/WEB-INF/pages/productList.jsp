@@ -6,7 +6,7 @@
 <tags:template>
     <title>Product list</title>
     <div class="container">
-        <tags:header cartTotalQuantity="${cart.totalQuantity}" totalPrice="${cart.totalCost}"/>
+        <tags:header cartTotalQuantity="${cart.totalQuantity}" totalPrice="${cart.totalCost}" cartButtonIsVisible="true"/>
         <hr class="my-2">
         <div class="clearfix">
             <h2 class="float-start">Phones</h2>

@@ -7,7 +7,7 @@
 <tags:template>
     <title>Product list</title>
     <div class="container">
-        <tags:header cartTotalQuantity="${cart.totalQuantity}" totalPrice="${cart.totalCost}"/>
+        <tags:header cartButtonIsVisible="false"/>
         <hr class="my-2">
 
         <div class="clearfix">
@@ -21,13 +21,13 @@
                class="btn btn-success float-end">Order</a>
         </div>
 
-        <c:if test="${cart.items.size() eq 0}">
+        <c:if test="${cartItems.size() eq 0}">
             <div class="clearfix mt-1 mb-3">
                 <h1 style="text-align: center">Cart is empty</h1>
             </div>
         </c:if>
 
-        <c:if test="${cart.items.size() != 0}">
+        <c:if test="${cartItems.size() != 0}">
             <div class="clearfix">
                 <form:form id="updateCart" action="${pageContext.request.contextPath}/cart/update" method="post"
                            modelAttribute="updateRequest">
@@ -43,7 +43,7 @@
                             <th>Action</th>
                         </tr>
                         </thead>
-                        <c:forEach var="cartItem" items="${cart.items}" varStatus="status">
+                        <c:forEach var="cartItem" items="${cartItems}" varStatus="status">
                             <c:set var="phone" value="${cartItem.phone}"/>
                             <tr>
                                 <td>${cartItem.phone.brand}</td>
@@ -66,8 +66,13 @@
                                     <input type="text" name="cartItems[${cartItem.phone.id}]"
                                            value="${cartItem.quantity}"/>
 
-                                    <c:set var="id">cartItems[${phone.id}]</c:set>
-                                    <p style="color: red">${errors[id]}</p>
+                                    <c:if test="${isUpdated == true}">
+                                        <c:set var="id">cartItems[${phone.id}]</c:set>
+                                        <p style="color: red">${errors[id]}</p>
+                                        <c:if test="${errors[id] == null}">
+                                            <p style="color: green">successfully added</p>
+                                        </c:if>
+                                    </c:if>
 
                                 </td>
                                 <td>

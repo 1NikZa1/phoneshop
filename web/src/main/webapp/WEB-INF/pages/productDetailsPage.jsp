@@ -7,7 +7,7 @@
     <title>${phone.model}</title>
 
     <div class="container mt-3">
-        <tags:header cartTotalQuantity="${cart.totalQuantity}" totalPrice="${cart.totalCost}"/>
+        <tags:header cartTotalQuantity="${cart.totalQuantity}" totalPrice="${cart.totalCost}" cartButtonIsVisible="true"/>
         <hr class="my-2">
 
         <div class="container mt-3 mb-5">

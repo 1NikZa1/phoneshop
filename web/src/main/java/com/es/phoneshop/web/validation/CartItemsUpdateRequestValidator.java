@@ -21,7 +21,6 @@ public class CartItemsUpdateRequestValidator implements Validator {
     @Resource
     private StockDao stockDao;
 
-
     @Override
     public boolean supports(Class<?> clazz) {
         return CartItemsUpdateRequest.class.equals(clazz);
