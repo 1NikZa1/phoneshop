@@ -25,9 +25,12 @@ public class AjaxCartController {
     @Resource
     private CartService cartService;
 
+    @Resource
+    private AddToCartRequestValidator validator;
+
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
-        binder.addValidators(new AddToCartRequestValidator());
+        binder.addValidators(validator);
     }
 
     @PostMapping

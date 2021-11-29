@@ -1,7 +1,7 @@
 const doAjaxPost = function (id) {
     $.ajax({
         type: "POST",
-        url: "ajaxCart",
+        url: "${pageContext.request.contextPath}/ajaxCart",
         data: JSON.stringify({
             "phoneId": $('#phone' + id + 'Id').val(),
             "quantity": $('#phone' + id + 'Quantity').val()

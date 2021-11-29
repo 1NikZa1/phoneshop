@@ -1,9 +1,7 @@
-package com.es.core.service;
+package com.es.core.service.phone;
 
 import com.es.core.dao.phone.PhoneDao;
 import com.es.core.model.phone.Phone;
-import com.es.core.service.phone.PhoneService;
-import com.es.core.service.phone.PhoneServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

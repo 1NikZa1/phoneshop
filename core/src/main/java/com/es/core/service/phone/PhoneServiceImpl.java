@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PhoneServiceImpl implements PhoneService {
@@ -14,6 +15,11 @@ public class PhoneServiceImpl implements PhoneService {
 
     public PhoneServiceImpl(PhoneDao phoneDao) {
         this.phoneDao = phoneDao;
+    }
+
+    @Override
+    public Optional<Phone> getPhone(Long productId) {
+        return phoneDao.get(productId);
     }
 
     @Override
