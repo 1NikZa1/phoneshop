@@ -1,26 +1,71 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.core.service.order.OrderService;
 import com.es.core.exception.OutOfStockException;
+import com.es.core.model.order.Order;
+import com.es.core.service.cart.CartService;
+import com.es.core.service.order.OrderService;
+import com.es.phoneshop.web.request.PlaceOrderRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/order")
 public class OrderPageController {
     @Resource
     private OrderService orderService;
+    @Resource
+    private CartService cartService;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public void getOrder() throws OutOfStockException {
-        orderService.createOrder(null);
+    @GetMapping
+    public String getOrder(Model model) throws OutOfStockException {
+        Order order = orderService.createOrder(cartService.getCart());
+        model.addAttribute("order", order);
+        if (!model.containsAttribute("request")) {
+            model.addAttribute("request", new PlaceOrderRequest());
+        }
+        return "order";
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public void placeOrder() throws OutOfStockException {
-        orderService.placeOrder(null);
+    @PostMapping
+    public String placeOrder(@Valid @ModelAttribute("request") PlaceOrderRequest request,
+                             BindingResult result,
+                             RedirectAttributes redirectAttributes) throws OutOfStockException {
+        if (result.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            result.getFieldErrors().forEach(v -> errors.put(v.getField(), v.getDefaultMessage()));
+            redirectAttributes.addFlashAttribute("errors", errors);
+            redirectAttributes.addFlashAttribute("request", request);
+            return "redirect:/order";
+        }
+
+        Order order = orderService.createOrder(cartService.getCart());
+
+        if (order.getOrderItems().isEmpty()) {
+            return "order";
+        }
+
+        populateOrder(order, request);
+        orderService.placeOrder(order);
+        cartService.clear();
+        return "order";//todo
+    }
+
+    private void populateOrder(Order order, PlaceOrderRequest request) {
+        order.setFirstName(request.getFirstName());
+        order.setLastName(request.getLastName());
+        order.setDeliveryAddress(request.getDeliveryAddress());
+        order.setContactPhoneNo(request.getContactPhoneNo());
+        order.setAdditionalInfo(request.getAdditionalInfo());
     }
 }

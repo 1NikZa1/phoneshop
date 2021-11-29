@@ -5,7 +5,7 @@
 
 <tags:template>
     <title>Product list</title>
-    <div class="container">
+    <div class="container mt-3">
         <tags:header cartTotalQuantity="${cart.totalQuantity}" totalPrice="${cart.totalCost}" cartButtonIsVisible="true"/>
         <hr class="my-2">
         <div class="clearfix">

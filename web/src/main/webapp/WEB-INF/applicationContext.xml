@@ -11,6 +11,10 @@
     <bean name="addToCartRequestValidator" class="com.es.phoneshop.web.validation.AddToCartRequestValidator">
     </bean>
 
-    <bean name="cartItemsUpdateValidator" class="com.es.phoneshop.web.validation.CartItemsUpdateRequestValidator">
+    <bean name="cartItemsUpdateRequestValidator" class="com.es.phoneshop.web.validation.CartItemsUpdateRequestValidator">
     </bean>
+
+    <bean id="validator"
+          class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+
 </beans>

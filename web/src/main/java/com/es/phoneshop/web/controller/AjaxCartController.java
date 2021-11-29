@@ -25,7 +25,7 @@ public class AjaxCartController {
     @Resource
     private CartService cartService;
 
-    @Resource
+    @Resource(name = "addToCartRequestValidator")
     private AddToCartRequestValidator validator;
 
     @InitBinder
