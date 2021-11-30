@@ -9,6 +9,7 @@ import com.es.core.model.order.OrderItem;
 import com.es.core.model.order.OrderStatus;
 import com.es.core.model.stock.Stock;
 import com.es.core.service.stock.StockService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void placeOrder(Order order) throws OutOfStockException {
         checkOrderItemsStock(order);
 

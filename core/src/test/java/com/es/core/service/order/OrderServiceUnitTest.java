@@ -1,5 +1,6 @@
 package com.es.core.service.order;
 
+import com.es.core.dao.order.OrderDao;
 import com.es.core.exception.OutOfStockException;
 import com.es.core.model.cart.Cart;
 import com.es.core.model.cart.CartItem;
@@ -31,6 +32,8 @@ public class OrderServiceUnitTest {
     @Mock
     private Cart cart;
     @Mock
+    private OrderDao orderDao;
+    @Mock
     private CartItem cartItem1;
     @Mock
     private CartItem cartItem2;
@@ -53,7 +56,7 @@ public class OrderServiceUnitTest {
     @Before
     public void setup() {
         deliveryPrice = 5;
-        orderService = new OrderServiceImpl(deliveryPrice, stockService);
+        orderService = new OrderServiceImpl(deliveryPrice, stockService, orderDao);
 
         cartItems.add(cartItem1);
         cartItems.add(cartItem2);

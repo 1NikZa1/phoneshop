@@ -20,7 +20,10 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @Transactional
 public class PhoneDaoImplTest {
-    private static final int dbSize = 5;
+    private static final int dbSize = 6;
+    public static final String QUERY = "apple";
+    public static final String SORT_FIELD = "price";
+    public static final String SORT_ORDER = "desc";
 
     @Resource
     private PhoneDao phoneDao;
@@ -91,5 +94,35 @@ public class PhoneDaoImplTest {
         List<Phone> phones = phoneDao.findAll(0, 2);
 
         assertEquals(2, phones.size());
+    }
+
+    @Test
+    public void shouldFindAllByQueryWithSortingByDesc() {
+        List<Phone> phones = phoneDao.findAll(QUERY, SORT_FIELD, SORT_ORDER, 0, 2);
+
+        assertEquals(1,phones.get(0).getPrice().compareTo(phones.get(1).getPrice()));
+    }
+
+    @Test
+    public void shouldFindAllByQueryWithSortingByDefault() {
+        List<Phone> phones = phoneDao.findAll(QUERY, SORT_FIELD, "", 0, 2);
+
+        assertEquals(-1,phones.get(0).getPrice().compareTo(phones.get(1).getPrice()));
+    }
+
+    @Test
+    public void shouldFindAllByEmptyQueryWithSortingByDefault() {
+        List<Phone> phones = phoneDao.findAll("", SORT_FIELD, "", 0, 10);
+
+        assertEquals(dbSize,phones.size());
+        assertEquals(-1,phones.get(0).getPrice().compareTo(phones.get(phones.size()-1).getPrice()));
+    }
+
+    @Test
+    public void shouldFindAllByEmptyQueryWithoutSorting() {
+        List<Phone> phones = phoneDao.findAll("", SORT_FIELD, "", 0, 10);
+
+        assertEquals(dbSize,phones.size());
+        assertEquals(-1,phones.get(0).getPrice().compareTo(phones.get(phones.size()-1).getPrice()));
     }
 }
