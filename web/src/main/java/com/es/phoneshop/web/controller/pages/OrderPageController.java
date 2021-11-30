@@ -56,9 +56,17 @@ public class OrderPageController {
         }
 
         populateOrder(order, request);
-        orderService.placeOrder(order);
-        cartService.clear();
-        return "order";//todo
+
+        try {
+            orderService.placeOrder(order);
+            cartService.clear();
+        } catch (OutOfStockException ex) {
+            cartService.getCart().getItems().removeIf(item -> ex.getMessage().contains(item.getPhone().getModel()));
+            redirectAttributes.addFlashAttribute("errorMsg", ex.getMessage());
+            return "redirect:/order";
+        }
+
+        return "redirect:/orderOverview/" + order.getSecureId();
     }
 
     private void populateOrder(Order order, PlaceOrderRequest request) {

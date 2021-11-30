@@ -1,5 +1,6 @@
 package com.es.core.service.order;
 
+import com.es.core.dao.order.OrderDao;
 import com.es.core.exception.OutOfStockException;
 import com.es.core.exception.StockNotFoundException;
 import com.es.core.model.cart.Cart;
@@ -20,10 +21,12 @@ public class OrderServiceImpl implements OrderService {
 
     private Integer deliveryPrice;
     private StockService stockService;
+    private OrderDao orderDao;
 
-    public OrderServiceImpl(Integer deliveryPrice, StockService stockService) {
+    public OrderServiceImpl(Integer deliveryPrice, StockService stockService, OrderDao orderDao) {
         this.deliveryPrice = deliveryPrice;
         this.stockService = stockService;
+        this.orderDao = orderDao;
     }
 
     @Override
@@ -53,13 +56,19 @@ public class OrderServiceImpl implements OrderService {
         order.getOrderItems().forEach(orderItem -> {
             Optional<Stock> stockOptional = stockService.getStock(orderItem.getPhone().getId());
             Stock stock = stockOptional.orElseThrow(StockNotFoundException::new);
-            stock.setStock((int) (stock.getStock()-orderItem.getQuantity()));
-            stock.setReserved((int) (stock.getReserved()+orderItem.getQuantity()));
+            stock.setStock((int) (stock.getStock() - orderItem.getQuantity()));
+            stock.setReserved((int) (stock.getReserved() + orderItem.getQuantity()));
             stockService.save(stock);
         });
 
         order.setStatus(OrderStatus.NEW);
         order.setSecureId(UUID.randomUUID().toString());
+        orderDao.save(order);
+    }
+
+    @Override
+    public Optional<Order> getOrderBySecureId(String secureId) {
+        return orderDao.getBySecureId(secureId);
     }
 
     private void checkOrderItemsStock(Order order) {

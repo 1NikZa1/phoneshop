@@ -5,14 +5,20 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <tags:template>
-    <title>Product list</title>
-    <div class="container">
+    <title>Order</title>
+    <div class="container mt-3">
         <tags:header cartButtonIsVisible="false"/>
         <hr class="my-2">
 
         <div class="clearfix">
             <h2 class="float-start">Order</h2>
         </div>
+
+        <c:if test="${errorMsg != null}">
+            <div class="clearfix">
+                <h2 class="float-start" style="color:red;">${errorMsg}</h2>
+            </div>
+        </c:if>
 
         <div class="clearfix mt-1 mb-3">
             <a href="${pageContext.request.contextPath}/productList"

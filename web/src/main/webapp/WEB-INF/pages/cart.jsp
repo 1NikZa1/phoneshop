@@ -5,7 +5,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <tags:template>
-    <title>Product list</title>
+    <title>Cart</title>
     <div class="container mt-3">
         <tags:header cartButtonIsVisible="false"/>
         <hr class="my-2">
