@@ -23,7 +23,7 @@ public class ProductListPageController {
 
     @GetMapping
     public String showProductList(@RequestParam(value = "query", required = false) String query,
-                                  @RequestParam(value = "sort", required = false) String sort,
+                                  @RequestParam(value = "sort", required = false,defaultValue = "model") String sort,
                                   @RequestParam(value = "order", required = false) String order,
                                   @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                   Model model) {

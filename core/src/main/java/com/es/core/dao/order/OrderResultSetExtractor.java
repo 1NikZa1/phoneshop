@@ -24,6 +24,7 @@ public class OrderResultSetExtractor implements ResultSetExtractor<Order> {
             order.setContactPhoneNo(resultSet.getString("contactPhoneNo"));
             order.setAdditionalInfo(resultSet.getString("additionalInfo"));
             order.setStatus(OrderStatus.valueOf(resultSet.getString("status").toUpperCase()));
+            order.setDate(resultSet.getTimestamp("date").toLocalDateTime());
         }
         return order;
     }

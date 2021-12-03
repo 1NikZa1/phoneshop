@@ -38,7 +38,7 @@ public class PhoneDaoImpl implements PhoneDao {
             "frontCameraMegapixels = :frontCameraMegapixels, ramGb = :ramGb, internalStorageGb = :internalStorageGb, " +
             "batteryCapacityMah = :batteryCapacityMah, talkTimeHours = :talkTimeHours, " +
             "standByTimeHours = :standByTimeHours, bluetooth = :bluetooth, positioning = :positioning, " +
-            "imageUrl = :imageUrl, description = :description where id = :id";
+            "imageUrl = :imageUrl, description = :description WHERE id = :id";
     private static final String INSERT_COLOR_FOR_PHONE_ID = "INSERT INTO phone2color (phoneId, colorId) VALUES (?,?)";
     private static final String DELETE_PHONE_COLORS = "DELETE FROM phone2color WHERE phoneId = ?";
     private static final String FIND_ALL_PHONES = "SELECT p.*, colors.id AS colorId, colors.code AS colorCode " +

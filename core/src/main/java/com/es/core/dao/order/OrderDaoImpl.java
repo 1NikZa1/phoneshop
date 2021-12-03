@@ -4,6 +4,7 @@ import com.es.core.dao.phone.PhoneDao;
 import com.es.core.exception.PhoneNotFoundException;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -18,14 +19,24 @@ import java.util.Optional;
 
 @Component
 public class OrderDaoImpl implements OrderDao {
+    private static final String ORDER_BY_ID = "SELECT * FROM orders WHERE id = ?";
     private static final String ORDER_BY_SECURE_ID = "SELECT * FROM orders WHERE secureId = ?";
     private static final String ORDER_ITEMS_BY_ORDER_ID = "SELECT * FROM order_items WHERE orderId = ?";
     private static final String INSERT_ORDER = "INSERT INTO orders (id, secureId, subtotal, deliveryPrice, " +
-            "totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status, additionalInfo) " +
+            "totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status, additionalInfo, date) " +
             "VALUES (:id, :secureId, :subtotal, :deliveryPrice, :totalPrice, :firstName, :lastName, " +
-            ":deliveryAddress, :contactPhoneNo, :status, :additionalInfo)";
+            ":deliveryAddress, :contactPhoneNo, :status, :additionalInfo, :date)";
     private static final String INSERT_ORDER_ITEM = "INSERT INTO order_items (phoneId, orderId, quantity) " +
             "VALUES (:phoneId, :orderId, :quantity)";
+    private static final String UPDATE_ORDER = "UPDATE orders SET secureId = :secureId, subtotal = :subtotal, " +
+            "deliveryPrice = :deliveryPrice, totalPrice = :totalPrice, firstName = :firstName, lastName = :lastName, " +
+            "deliveryAddress = :deliveryAddress, contactPhoneNo = :contactPhoneNo, status = :status, " +
+            "additionalInfo = :additionalInfo, date = :date " +
+            "WHERE id = :id";
+    public static final String FIND_ALL_ORDERS = "SELECT id, firstName, lastName, contactPhoneNo, " +
+            "deliveryAddress, date, totalPrice, status " +
+            "FROM orders";
+    private static final String DELETE_ORDER_ITEMS = "DELETE FROM order_items WHERE orderId = ?";
 
     @Resource
     private JdbcTemplate jdbcTemplate;
@@ -33,10 +44,26 @@ public class OrderDaoImpl implements OrderDao {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     @Resource
     private PhoneDao phoneDao;
+    @Resource
+    private BeanPropertyRowMapper<Order> orderBeanPropertyRowMapper;
+
+    @Override
+    public List<Order> getAll() {
+        return jdbcTemplate.query(FIND_ALL_ORDERS, orderBeanPropertyRowMapper);
+    }
+
+    @Override
+    public Optional<Order> getById(Long orderId) {
+        return getOrder(ORDER_BY_ID, String.valueOf(orderId));
+    }
 
     @Override
     public Optional<Order> getBySecureId(String secureOrderId) {
-        Order order = jdbcTemplate.query(ORDER_BY_SECURE_ID, new OrderResultSetExtractor(), secureOrderId);
+        return getOrder(ORDER_BY_SECURE_ID, secureOrderId);
+    }
+
+    private Optional<Order> getOrder(String query, String key) {
+        Order order = jdbcTemplate.query(query, new OrderResultSetExtractor(), key);
         if (order.getId() == null) {
             return Optional.empty();
         }
@@ -52,13 +79,35 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public void save(Order order) {
+        if (order.getId() == null) {
+            insert(order);
+        } else {
+            update(order);
+        }
+
+        if (order.getOrderItems().isEmpty()) {
+            return;
+        }
+        insertOrderItems(order);
+    }
+
+    private void insert(Order order) {
         SqlParameterSource namedParams = getSqlParameterSource(order);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update(INSERT_ORDER, namedParams, keyHolder);
         if (order.getId() == null) {
             order.setId(keyHolder.getKey().longValue());
         }
-        insertOrderItems(order);
+    }
+
+    private void update(Order order) {
+        SqlParameterSource namedParams = getSqlParameterSource(order);
+        namedParameterJdbcTemplate.update(UPDATE_ORDER, namedParams);
+        deleteOrderItems(order.getId());
+    }
+
+    private void deleteOrderItems(Long id) {
+        jdbcTemplate.update(DELETE_ORDER_ITEMS, id);
     }
 
     private SqlParameterSource getSqlParameterSource(Order order) {
@@ -73,7 +122,8 @@ public class OrderDaoImpl implements OrderDao {
                 .addValue("deliveryAddress", order.getDeliveryAddress())
                 .addValue("contactPhoneNo", order.getContactPhoneNo())
                 .addValue("additionalInfo", order.getAdditionalInfo())
-                .addValue("status", order.getStatus().toString());
+                .addValue("status", order.getStatus().toString())
+                .addValue("date", order.getDate());
     }
 
     private void insertOrderItems(Order order) {

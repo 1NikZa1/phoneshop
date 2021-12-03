@@ -28,6 +28,10 @@
         <constructor-arg value="com.es.core.model.phone.Phone"/>
     </bean>
 
+    <bean id="orderBeanPropertyRowMapper" class="org.springframework.jdbc.core.BeanPropertyRowMapper">
+        <constructor-arg value="com.es.core.model.order.Order"/>
+    </bean>
+
     <bean id="phoneService" class="com.es.core.service.phone.PhoneServiceImpl">
         <constructor-arg ref="phoneDaoImpl"/>
     </bean>
