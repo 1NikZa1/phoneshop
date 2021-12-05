@@ -7,11 +7,13 @@
     <context:property-placeholder location="WEB-INF/conf/application.properties"/>
     <import resource="classpath:context/applicationContext-core.xml"/>
     <import resource="classpath:context/applicationContext-demoda.xml"/>
+    <import resource="security.xml"/>
 
     <bean name="addToCartRequestValidator" class="com.es.phoneshop.web.validation.AddToCartRequestValidator">
     </bean>
 
-    <bean name="cartItemsUpdateRequestValidator" class="com.es.phoneshop.web.validation.CartItemsUpdateRequestValidator">
+    <bean name="cartItemsUpdateRequestValidator"
+          class="com.es.phoneshop.web.validation.CartItemsUpdateRequestValidator">
     </bean>
 
     <bean id="validator"
