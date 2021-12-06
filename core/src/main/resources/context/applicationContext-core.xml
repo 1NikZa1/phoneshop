@@ -43,6 +43,12 @@
         <constructor-arg ref="phoneDaoImpl"/>
     </bean>
 
+    <bean id="orderService" class="com.es.core.service.order.OrderServiceImpl">
+        <constructor-arg value="${delivery.price:0}"/>
+        <constructor-arg ref="stockService"/>
+        <constructor-arg ref="orderDaoImpl"/>
+    </bean>
+
     <jdbc:initialize-database enabled="${db.insertSchema}" data-source="dataSource">
         <jdbc:script location="classpath:db/schema.sql"/>
     </jdbc:initialize-database>

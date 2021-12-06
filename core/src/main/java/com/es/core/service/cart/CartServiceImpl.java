@@ -96,6 +96,12 @@ public class CartServiceImpl implements CartService {
         recalculateCart();
     }
 
+    @Override
+    public void clear() {
+        cart.getItems().clear();
+        recalculateCart();
+    }
+
     private void recalculateCart() {
         cart.setTotalQuantity(cart.getItems().stream()
                 .map(CartItem::getQuantity).mapToLong(el -> el).sum());

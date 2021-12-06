@@ -116,6 +116,7 @@ public class PhoneDaoImpl implements PhoneDao {
         jdbcTemplate.update(DELETE_PHONE_COLORS, id);
     }
 
+    @Override
     public List<Phone> findAll(int offset, int limit) {
         return jdbcTemplate.query(FIND_ALL_PHONES, phoneBeanPropertyRowMapper, offset, limit);
     }

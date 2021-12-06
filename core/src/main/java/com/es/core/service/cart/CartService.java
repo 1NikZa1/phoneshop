@@ -13,4 +13,6 @@ public interface CartService {
     void update(Map<Long, Long> items);
 
     void remove(Long phoneId);
+
+    void clear();
 }

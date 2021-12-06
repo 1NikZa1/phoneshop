@@ -5,8 +5,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <tags:template>
-    <title>Product list</title>
-    <div class="container">
+    <title>Cart</title>
+    <div class="container mt-3">
         <tags:header cartButtonIsVisible="false"/>
         <hr class="my-2">
 
@@ -17,8 +17,6 @@
         <div class="clearfix mt-1 mb-3">
             <a href="${pageContext.request.contextPath}/productList"
                class="btn btn-success float-start">Back to product list</a>
-            <a href="#"
-               class="btn btn-success float-end">Order</a>
         </div>
 
         <c:if test="${cartItems.size() eq 0}">
@@ -95,7 +93,7 @@
             </div>
 
             <div>
-                <a href="#"
+                <a href="${pageContext.request.contextPath}/order"
                    class="btn btn-success float-end">Order</a>
             </div>
         </c:if>
