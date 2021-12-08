@@ -12,7 +12,9 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -74,7 +76,7 @@ public class PhoneDaoImpl implements PhoneDao {
 
     public Optional<Phone> get(final Long key) {
         List<Phone> phones = jdbcTemplate.query(PHONE_BY_ID, new PhoneResultSetExtractor(), key);
-        if (phones.size() == 0) {
+        if (phones.isEmpty()) {
             return Optional.empty();
         }
         return Optional.of(phones.get(0));
@@ -132,10 +134,11 @@ public class PhoneDaoImpl implements PhoneDao {
         }
 
         if (query == null || query.trim().isEmpty()) {
-            if (sortField == null || sortField.isEmpty())
+            if (sortField == null || sortField.isEmpty()) {
                 return FIND_ALL_PHONES;
-            else
+            } else {
                 return createSqlForSorting(FIND_ALL_ORDERED_PHONES, "", sortField, sortOrder);
+            }
         }
 
         return createSqlForSorting(FIND_ALL_ORDERED_PHONES_BY_QUERY, query, sortField, sortOrder);

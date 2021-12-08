@@ -21,6 +21,7 @@ import static org.mockito.Mockito.when;
 public class PhoneServiceUnitTest {
     public static final String PHONE_BRAND_1 = "apple";
     public static final String PHONE_BRAND_2 = "samsung";
+
     @Mock
     private Phone phone1;
     @Mock

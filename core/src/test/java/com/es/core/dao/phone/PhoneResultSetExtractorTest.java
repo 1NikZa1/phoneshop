@@ -46,7 +46,7 @@ public class PhoneResultSetExtractorTest {
     @Test
     public void shouldExtractDataWithoutColors() {
         phone = jdbcTemplate.query(PHONE_BY_ID, phoneResultSetExtractor, 1004L).get(0);
-        System.out.println(phone.getColors());
+
         assertEquals(0, phone.getColors().size());
     }
 }

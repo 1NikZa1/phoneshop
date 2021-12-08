@@ -39,6 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 public class OrderPageControllerUnitTest {
     private static final String INVALID_REQUEST_PHONE_NUMBER = "contactPhoneNo=qwerty";
+
     private MockMvc mockMvc;
 
     @Mock

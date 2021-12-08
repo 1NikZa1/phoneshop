@@ -57,8 +57,7 @@ public class CartServiceImpl implements CartService {
     }
 
     public void setCartItemQuantity(CartItem cartItem, Long quantity) {
-        Optional<Stock> stockOptional = stockDao.get(cartItem.getPhone().getId());
-        Integer stockQuantity = stockOptional.map(Stock::getStock).orElse(0);
+        Integer stockQuantity = retrieveStockQuantityFromCartItem(cartItem);
         if (stockQuantity - quantity >= 0) {
             cartItem.setQuantity(quantity);
         }
@@ -68,8 +67,8 @@ public class CartServiceImpl implements CartService {
         if (quantity <= 0) {
             throw new IllegalArgumentException();
         }
-        Optional<Stock> stockOptional = stockDao.get(cartItem.getPhone().getId());
-        Integer stockQuantity = stockOptional.map(Stock::getStock).orElse(0);
+
+        Integer stockQuantity = retrieveStockQuantityFromCartItem(cartItem);
         Long quantityInCart = cartItem.getQuantity();
 
         if (stockQuantity < quantity + quantityInCart) {
@@ -82,6 +81,11 @@ public class CartServiceImpl implements CartService {
         cartItem.setQuantity(cartItem.getQuantity() + quantity);
 
         recalculateCart();
+    }
+
+    private Integer retrieveStockQuantityFromCartItem(CartItem cartItem) {
+        Optional<Stock> stockOptional = stockDao.get(cartItem.getPhone().getId());
+        return stockOptional.map(Stock::getStock).orElse(0);
     }
 
     private Optional<CartItem> findCartItem(Long phoneId) {

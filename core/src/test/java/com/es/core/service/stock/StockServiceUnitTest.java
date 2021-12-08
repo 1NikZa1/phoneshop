@@ -21,6 +21,7 @@ import static org.mockito.Mockito.when;
 public class StockServiceUnitTest {
     public static final Long EXISTING_PHONE_ID = 1000L;
     public static final Long NONEXISTING_PHONE_ID = 1L;
+
     @Mock
     private StockDao stockDao;
     @Mock
