@@ -14,7 +14,6 @@ import javax.annotation.Resource;
 @Controller
 @RequestMapping(value = "/productDetails")
 public class ProductDetailsPageController {
-
     @Resource
     private PhoneService phoneService;
     @Resource
@@ -28,5 +27,4 @@ public class ProductDetailsPageController {
         model.addAttribute("cart", cartService.getCart());
         return "productDetailsPage";
     }
-
 }
