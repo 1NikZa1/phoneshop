@@ -12,6 +12,7 @@ import com.es.core.service.stock.StockService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -65,12 +66,18 @@ public class OrderServiceImpl implements OrderService {
 
         order.setStatus(OrderStatus.NEW);
         order.setSecureId(UUID.randomUUID().toString());
+        order.setDate(LocalDateTime.now());
         orderDao.save(order);
     }
 
     @Override
     public Optional<Order> getOrderBySecureId(String secureId) {
         return orderDao.getBySecureId(secureId);
+    }
+
+    @Override
+    public Optional<Order> getOrderById(Long orderId) {
+        return orderDao.getById(orderId);
     }
 
     private void checkOrderItemsStock(Order order) {
@@ -91,5 +98,35 @@ public class OrderServiceImpl implements OrderService {
                     .collect(Collectors.joining(", "));
             throw new OutOfStockException(outOfStockPhoneIds + "out of stock and was deleted");
         }
+    }
+
+    @Override
+    public List<Order> getOrders() {
+        return orderDao.getAll();
+    }
+
+    @Override
+    @Transactional
+    public void updateOrderStatus(Order order, OrderStatus status) {
+        order.setStatus(status);
+        switch (status) {
+            case DELIVERED:
+                order.getOrderItems().forEach(orderItem -> {
+                    Optional<Stock> stockOptional = stockService.getStock(orderItem.getPhone().getId());
+                    Stock stock = stockOptional.orElseThrow(StockNotFoundException::new);
+                    stock.setReserved((int) (stock.getReserved() - orderItem.getQuantity()));
+                    stockService.save(stock);
+                });
+                break;
+            case REJECTED:
+                order.getOrderItems().forEach(orderItem -> {
+                    Optional<Stock> stockOptional = stockService.getStock(orderItem.getPhone().getId());
+                    Stock stock = stockOptional.orElseThrow(StockNotFoundException::new);
+                    stock.setStock((int) (stock.getStock() + orderItem.getQuantity()));
+                    stock.setReserved((int) (stock.getReserved() - orderItem.getQuantity()));
+                    stockService.save(stock);
+                });
+        }
+        orderDao.save(order);
     }
 }

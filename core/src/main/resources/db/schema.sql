@@ -66,13 +66,14 @@ create table orders
     secureId        VARCHAR(256),
     subtotal        DOUBLE      NOT NULL,
     deliveryPrice   DOUBLE      NOT NULL,
-    totalPrice   DOUBLE      NOT NULL,
+    totalPrice      DOUBLE      NOT NULL,
     firstName       VARCHAR(50) NOT NULL,
     lastName        VARCHAR(50) NOT NULL,
     deliveryAddress VARCHAR(50) NOT NULL,
     contactPhoneNo  VARCHAR(50) NOT NULL,
     additionalInfo  VARCHAR(512),
-    status     VARCHAR(20) not null
+    date            TIMESTAMP   NOT NULL,
+    status          VARCHAR(20) NOT NULL
 );
 
 create table order_items

@@ -6,6 +6,7 @@ import com.es.core.model.cart.Cart;
 import com.es.core.model.cart.CartItem;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
+import com.es.core.model.order.OrderStatus;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.stock.Stock;
 import com.es.core.service.stock.StockService;
@@ -18,9 +19,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -49,6 +53,8 @@ public class OrderServiceUnitTest {
     private ArrayList<CartItem> cartItems;
     @Spy
     private ArrayList<OrderItem> orderItems;
+    @Spy
+    private ArrayList<Order> orders;
 
     private Integer deliveryPrice;
     private OrderService orderService;
@@ -62,6 +68,8 @@ public class OrderServiceUnitTest {
         cartItems.add(cartItem2);
 
         orderItems.add(orderItem);
+
+        orders.add(order);
 
         when(orderItem.getPhone()).thenReturn(phone);
         when(orderItem.getPhone().getId()).thenReturn(100L);
@@ -102,5 +110,52 @@ public class OrderServiceUnitTest {
         when(order.getOrderItems()).thenReturn(orderItems);
 
         orderService.placeOrder(order);
+
+        verify(stockService,times(order.getOrderItems().size())).save(stock);
+        verify(orderDao).save(order);
+    }
+
+    @Test
+    public void shouldGetOrderBySecureId() {
+        when(orderDao.getBySecureId(anyString())).thenReturn(Optional.of(order));
+
+        assertEquals(Optional.of(order),orderService.getOrderBySecureId(anyString()));
+
+        verify(orderDao,times(1)).getBySecureId(anyString());
+    }
+
+    @Test
+    public void shouldGetOrderById() {
+        when(orderDao.getById(anyLong())).thenReturn(Optional.of(order));
+
+        assertEquals(Optional.of(order),orderService.getOrderById(anyLong()));
+
+        verify(orderDao,times(1)).getById(anyLong());
+    }
+
+    @Test
+    public void shouldGetOrders() {
+        when(orderDao.getAll()).thenReturn(orders);
+
+        List<Order> actualOrders =  orderService.getOrders();
+
+        verify(orderDao,times(1)).getAll();
+        assertEquals(orders, actualOrders);
+    }
+
+    @Test
+    public void shouldUpdateOrderStatusOnDelivered() {
+        orderService.updateOrderStatus(order, OrderStatus.DELIVERED);
+
+        verify(order).setStatus(OrderStatus.DELIVERED);
+        verify(orderDao).save(order);
+    }
+
+    @Test
+    public void shouldUpdateOrderStatusOnRejected() {
+        orderService.updateOrderStatus(order, OrderStatus.REJECTED);
+
+        verify(order).setStatus(OrderStatus.REJECTED);
+        verify(orderDao).save(order);
     }
 }
