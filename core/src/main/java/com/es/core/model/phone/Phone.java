@@ -1,9 +1,11 @@
 package com.es.core.model.phone;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Phone {
@@ -57,6 +59,16 @@ public class Phone {
     private String imageUrl;
 
     private String description;
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    private List<Comment> comments = new ArrayList<>();
 
     public String getBrand() {
         return brand;

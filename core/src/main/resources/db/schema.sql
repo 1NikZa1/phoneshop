@@ -4,6 +4,7 @@ drop table if exists stocks;
 drop table if exists phones;
 drop table if exists orders;
 drop table if exists order_items;
+drop table if exists comments;
 
 create table colors
 (
@@ -62,7 +63,7 @@ create table stocks
 
 create table orders
 (
-    id              BIGINT auto_increment primary key,
+    id              BIGINT auto_increment PRIMARY KEY,
     secureId        VARCHAR(256),
     subtotal        DOUBLE      NOT NULL,
     deliveryPrice   DOUBLE      NOT NULL,
@@ -78,8 +79,17 @@ create table orders
 
 create table order_items
 (
-    id       BIGINT auto_increment primary key,
-    phoneId  BIGINT  not null,
-    orderId  BIGINT  not null,
-    quantity INTEGER not null
+    id       BIGINT auto_increment PRIMARY KEY,
+    phoneId  BIGINT  NOT NULL,
+    orderId  BIGINT  NOT NULL,
+    quantity INTEGER NOT NULL
+);
+
+create table comments
+(
+    id       BIGINT auto_increment PRIMARY KEY,
+    phoneId  BIGINT       NOT NULL,
+    username VARCHAR(50)  NOT NULL,
+    message  VARCHAR(512) NOT NULL,
+    date     TIMESTAMP    NOT NULL
 );
