@@ -8,6 +8,8 @@ import java.util.Optional;
 public interface PhoneService {
     Optional<Phone> getPhone(Long productId);
 
+    Optional<Phone> getPhoneByModel(String model);
+
     List<Phone> findPhones(String query, String sortField, String sortOrder, int pageNumber, int phonesPerPage);
 
     int countPhones(String query);

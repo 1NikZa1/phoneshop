@@ -24,6 +24,11 @@ public class PhoneDaoImpl implements PhoneDao {
             "LEFT JOIN phone2color ON phone2color.phoneId = phones.id " +
             "LEFT JOIN colors ON colors.id = phone2color.colorId " +
             "WHERE phones.id = ?";
+    private static final String PHONE_BY_MODEL = "SELECT phones.*, colors.id AS colorId, colors.code AS colorCode " +
+            "FROM phones " +
+            "LEFT JOIN phone2color ON phone2color.phoneId = phones.id " +
+            "LEFT JOIN colors ON colors.id = phone2color.colorId " +
+            "WHERE phones.model = ?";
     private static final String INSERT_PHONE = "INSERT INTO phones (id, brand, model, price, displaySizeInches, " +
             "weightGr, lengthMm, widthMm, heightMm, announced, deviceType, os, displayResolution, pixelDensity, " +
             "displayTechnology, backCameraMegapixels, frontCameraMegapixels, ramGb, internalStorageGb, " +
@@ -76,6 +81,15 @@ public class PhoneDaoImpl implements PhoneDao {
 
     public Optional<Phone> get(final Long key) {
         List<Phone> phones = jdbcTemplate.query(PHONE_BY_ID, new PhoneResultSetExtractor(), key);
+        if (phones.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(phones.get(0));
+    }
+
+    @Override
+    public Optional<Phone> getByModel(String model) {
+        List<Phone> phones = jdbcTemplate.query(PHONE_BY_MODEL, new PhoneResultSetExtractor(), model);
         if (phones.isEmpty()) {
             return Optional.empty();
         }

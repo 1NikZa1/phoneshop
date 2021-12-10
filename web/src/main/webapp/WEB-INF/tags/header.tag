@@ -26,5 +26,6 @@
             <a href="${pageContext.request.contextPath}/logout" class="btn btn-dark">Logout</a>
         </sec:authorize>
 
+        <a href="${pageContext.request.contextPath}/add2cart" class="btn btn-dark">Quick order</a>
     </div>
 </header>
