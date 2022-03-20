@@ -1,6 +1,7 @@
 package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.exception.NoSuchPageFoundException;
+import com.es.core.model.phone.Phone;
 import com.es.core.service.cart.CartService;
 import com.es.core.service.phone.PhoneService;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/productList")
@@ -41,7 +43,9 @@ public class ProductListPageController {
             throw new NoSuchPageFoundException();
         }
 
-        model.addAttribute("phones", phoneService.findPhones(query, sort, order, page, PHONES_PER_PAGE));
+        List<Phone> phones = phoneService.findPhones(query, sort, order, page, PHONES_PER_PAGE);
+
+        model.addAttribute("phones", phones);
         model.addAttribute("currentPage", page);
         model.addAttribute("pagesTotal", pagesTotal);
         model.addAttribute("cart", cartService.getCart());

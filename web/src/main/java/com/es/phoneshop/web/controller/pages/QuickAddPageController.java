@@ -1,4 +1,4 @@
-package com.es.phoneshop.web.controller.pages.admin;
+package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.service.cart.CartService;
 import com.es.core.service.phone.PhoneService;

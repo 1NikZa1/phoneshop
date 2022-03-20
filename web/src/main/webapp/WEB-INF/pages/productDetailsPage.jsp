@@ -4,6 +4,7 @@
 <%@ taglib prefix="input" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <tags:template>
     <title>${phone.model}</title>
@@ -29,6 +30,17 @@
                         <input id="phone${phone.id}Quantity" class="form-check-inline" value="1">
                         <input type="hidden" id="phone${phone.id}Id" value="${phone.id}">
                         <button onclick="doAjaxPost(${phone.id})" class="btn btn-dark">Add</button>
+                        <sec:authorize access="isAuthenticated() and hasRole('ROLE_ADMIN')">
+                            <hr>
+                            <div class="text-center">
+                                <a href="${pageContext.request.contextPath}/admin/addPhone/${phone.id}"
+                                   class="btn btn-dark float-center">Edit</a>
+                                <a href="${pageContext.request.contextPath}/admin/deletePhone/${phone.id}"
+                                   class="btn btn-dark float-center">
+                                    Delete
+                                </a>
+                            </div>
+                        </sec:authorize>
                         <p style="color: green" id="quantity${phone.id}Message"></p>
                         <p style="color: red" id="quantity${phone.id}Error"></p>
                     </div>
@@ -36,38 +48,6 @@
 
                 <div class="mt-3" style="width: 400px;">
                     <p class="float-start">${phone.description}</p>
-                </div>
-
-                <div style="max-width: 400px">
-                    <h4>Add comment:</h4>
-                    <form:form method="post" modelAttribute="request">
-
-                        <form:input path="username" class="form-control" placeholder="username" type="text"/>
-                        <span style="color: red">${errors["username"]}</span>
-                        <form:textarea class="form-control mt-2"
-                                       placeholder="Additional info"
-                                       rows="2"
-                                       cols="35"
-                                       path="message"/>
-                        <span style="color: red">${errors["message"]}</span>
-                        <form:input path="phoneId" class="form-control" placeholder="phoneId" type="hidden" value="${phone.id}"/>
-                        <p>
-                            <button type="submit" class="btn btn-success mt-1">Place order</button>
-                        </p>
-                    </form:form>
-
-                    <h4>Comments:</h4>
-                    <div>
-                        <c:forEach var="comment" items="${comments}">
-                            <fmt:parseDate value="${comment.createdDate}" pattern="yyyy-MM-dd'T'HH:mm"
-                                           var="parsedDateTime"
-                                           type="both"/>
-                            <h6>${comment.username}(<fmt:formatDate pattern="dd.MM.yyyy HH:mm"
-                                                                    value="${parsedDateTime}"/>):</h6>
-                            <p style="word-wrap: break-word;">${comment.message}</p>
-                            <hr class="my-2">
-                        </c:forEach>
-                    </div>
                 </div>
 
             </div>
@@ -78,23 +58,23 @@
                     <tbody>
                     <tr>
                         <td>Size:</td>
-                        <td>${phone.displaySizeInches}''</td>
+                        <td>${phone.displaySizeInches}"</td>
                     </tr>
                     <tr>
                         <td>Resolution:</td>
-                        <td>${phone.displayResolution}"</td>
+                        <td>${phone.displayResolution}</td>
                     </tr>
                     <tr>
                         <td>Technology:</td>
-                        <td>${phone.displayTechnology}"</td>
+                        <td>${phone.displayTechnology}</td>
                     </tr>
                     <tr>
                         <td>Pixel Density:</td>
-                        <td>${phone.pixelDensity}"</td>
+                        <td>${phone.pixelDensity}</td>
                     </tr>
                     </tbody>
                 </table>
-                <br/>
+
                 <h4><b>Dimensions & weight</b></h4>
                 <table class="table table-bordered">
                     <tbody>
@@ -104,15 +84,19 @@
                     </tr>
                     <tr>
                         <td>Width:</td>
-                        <td>${phone.widthMm.intValue()}"mm</td>
+                        <td>${phone.widthMm.intValue()}mm</td>
+                    </tr>
+                    <tr>
+                        <td>Height:</td>
+                        <td>${phone.heightMm.intValue()}mm</td>
                     </tr>
                     <tr>
                         <td>Weight:</td>
-                        <td>${phone.weightGr.intValue()}"g</td>
+                        <td>${phone.weightGr.intValue()}g</td>
                     </tr>
                     </tbody>
                 </table>
-                <br/>
+
                 <h4><b>Camera</b></h4>
                 <table class="table table-bordered">
                     <tbody>
@@ -126,25 +110,17 @@
                     </tr>
                     </tbody>
                 </table>
-                <br/>
+
                 <h4><b>Battery</b></h4>
                 <table class="table table-bordered">
                     <tbody>
-                    <tr>
-                        <td>Talk time:</td>
-                        <td>${phone.talkTimeHours.intValue()}h</td>
-                    </tr>
-                    <tr>
-                        <td>Stand by time:</td>
-                        <td>${phone.standByTimeHours.intValue()}h</td>
-                    </tr>
                     <tr>
                         <td>Battery capacity:</td>
                         <td>${phone.batteryCapacityMah}mAh</td>
                     </tr>
                     </tbody>
                 </table>
-                <br/>
+
                 <h4><b>Other</b></h4>
                 <table class="table table-bordered">
                     <tbody>
@@ -160,6 +136,22 @@
                     <tr>
                         <td>Bluetooth:</td>
                         <td>${phone.bluetooth}</td>
+                    </tr>
+                    <tr>
+                        <td>OS:</td>
+                        <td>${phone.os}</td>
+                    </tr>
+                    <tr>
+                        <td>RAM:</td>
+                        <td>${phone.ramGb} Gb</td>
+                    </tr>
+                    <tr>
+                        <td>Storage:</td>
+                        <td>${phone.internalStorageGb} Gb</td>
+                    </tr>
+                    <tr>
+                        <td>Positioning:</td>
+                        <td>${phone.positioning}</td>
                     </tr>
                     </tbody>
                 </table>

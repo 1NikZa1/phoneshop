@@ -6,7 +6,7 @@
 <%@ attribute name="cartButtonIsVisible" required="true" %>
 
 <header class="clearfix">
-    <h1 class="float-start">Phonify</h1>
+    <h1 class="float-start"> <a href="${pageContext.request.contextPath}/" style="text-decoration: none">Phonify</a></h1>
     <div class="float-end">
         <sec:authorize access="!isAuthenticated()">
             <a href="${pageContext.request.contextPath}/login" class="btn btn-dark">Login</a>
@@ -14,7 +14,15 @@
 
         <sec:authorize access="isAuthenticated() and hasRole('ROLE_ADMIN')">
             <sec:authentication var="username" property="principal.username"/>
-            <a href="${pageContext.request.contextPath}/admin/orders">Hello, ${username}</a>
+                <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    Hello, ${username}
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/admin/orders">Manage orders</a></li>
+                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/admin/brands">Manage brands</a></li>
+                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/admin/colors">Manage colors</a></li>
+                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/admin/addPhone">Add phone</a></li>
+                </ul>
         </sec:authorize>
 
         <c:if test="${cartButtonIsVisible == true}">
@@ -25,7 +33,5 @@
         <sec:authorize access="isAuthenticated()">
             <a href="${pageContext.request.contextPath}/logout" class="btn btn-dark">Logout</a>
         </sec:authorize>
-
-        <a href="${pageContext.request.contextPath}/add2cart" class="btn btn-dark">Quick order</a>
     </div>
 </header>

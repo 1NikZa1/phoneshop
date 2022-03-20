@@ -15,7 +15,7 @@ public class StockResultSetExtractor implements ResultSetExtractor<Stock> {
 
         Phone phone = new Phone();
         while (resultSet.next()) {
-            phone.setId(resultSet.getLong("phoneId"));
+            phone.setId(resultSet.getLong("id"));
             stock.setPhone(phone);
             stock.setStock(resultSet.getInt("stock"));
             stock.setReserved(resultSet.getInt("reserved"));

@@ -50,7 +50,6 @@
                                             ${cartItem.phone.model}
                                     </a>
                                 </td>
-                                </td>
                                 <td>
                                     <c:forEach var="color" items="${cartItem.phone.colors}" varStatus="colorLoop">
                                         ${color.code}

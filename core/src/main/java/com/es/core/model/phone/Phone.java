@@ -1,11 +1,8 @@
 package com.es.core.model.phone;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class Phone {
@@ -48,10 +45,6 @@ public class Phone {
 
     private Integer batteryCapacityMah;
 
-    private BigDecimal talkTimeHours;
-
-    private BigDecimal standByTimeHours;
-
     private String bluetooth;
 
     private String positioning;
@@ -60,15 +53,11 @@ public class Phone {
 
     private String description;
 
-    public List<Comment> getComments() {
-        return comments;
-    }
+    private Integer stock;
 
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
+    private Integer reserved;
 
-    private List<Comment> comments = new ArrayList<>();
+    private Integer stockRequested;
 
     public String getBrand() {
         return brand;
@@ -206,22 +195,6 @@ public class Phone {
         this.batteryCapacityMah = batteryCapacityMah;
     }
 
-    public BigDecimal getTalkTimeHours() {
-        return talkTimeHours;
-    }
-
-    public void setTalkTimeHours(BigDecimal talkTimeHours) {
-        this.talkTimeHours = talkTimeHours;
-    }
-
-    public BigDecimal getStandByTimeHours() {
-        return standByTimeHours;
-    }
-
-    public void setStandByTimeHours(BigDecimal standByTimeHours) {
-        this.standByTimeHours = standByTimeHours;
-    }
-
     public String getBluetooth() {
         return bluetooth;
     }
@@ -285,4 +258,29 @@ public class Phone {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+
+    public Integer getReserved() {
+        return reserved;
+    }
+
+    public void setReserved(Integer reserved) {
+        this.reserved = reserved;
+    }
+
+    public Integer getStockRequested() {
+        return stockRequested;
+    }
+
+    public void setStockRequested(Integer stockRequested) {
+        this.stockRequested = stockRequested;
+    }
+
 }

@@ -27,3 +27,4 @@ const updateCartInfo = function (id) {
     $('#cartTotalQuantity').html(quantity).show()
     $('#totalPrice').html(totalCost).show();
 }
+

@@ -2,16 +2,23 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="input" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <tags:template>
     <title>Product list</title>
     <div class="container mt-3">
-        <tags:header cartTotalQuantity="${cart.totalQuantity}" totalPrice="${cart.totalCost}" cartButtonIsVisible="true"/>
+        <tags:header cartTotalQuantity="${cart.totalQuantity}" totalPrice="${cart.totalCost}"
+                     cartButtonIsVisible="true"/>
         <hr class="my-2">
         <div class="clearfix">
             <h2 class="float-start">Phones</h2>
+            <c:if test="${msg != null}">
+                <h2 class="float-start" style="color:red;">&nbsp;&nbsp;${msg}</h2>
+            </c:if>
             <form action="${pageContext.request.contextPath}/productList" class="float-end">
                 <div class="input-group mb-3">
+                    <a href="${pageContext.request.contextPath}/reviews" class="btn btn-dark">Reviews</a>
+                    <a href="${pageContext.request.contextPath}/add2cart" class="btn btn-dark">Quick order</a>
                     <input name="query" value="${param.query}" type="text" class="form-control form-control-sm"
                            placeholder="Search Here">
                     <button class="input-group-text btn-success">Search</button>
@@ -26,8 +33,6 @@
                     <td>Image</td>
                     <td>
                         Brand
-                        <tags:sort sort="brand" order="asc"/>
-                        <tags:sort sort="brand" order="desc"/>
                     </td>
                     <th>
                         Model
@@ -47,6 +52,9 @@
                     </td>
                     <th>Quantity</th>
                     <th>Action</th>
+                    <sec:authorize access="isAuthenticated() and hasRole('ROLE_SUPPLIER')">
+                        <th>Supplier actions</th>
+                    </sec:authorize>
                 </tr>
                 </thead>
                 <c:forEach var="phone" items="${phones}">
@@ -61,7 +69,6 @@
                                     ${phone.model}
                             </a>
                         </td>
-                        </td>
                         <td>
                             <c:forEach var="color" items="${phone.colors}" varStatus="colorLoop">
                                 ${color.code}
@@ -73,6 +80,8 @@
                         <td>
                             <input id="phone${phone.id}Quantity" class="form-check-inline" value="1">
                             <input type="hidden" id="phone${phone.id}Id" value="${phone.id}">
+                            <br>
+                            <span>in stock: ${phone.stock}</span>
                             <p style="color: green" id="quantity${phone.id}Message"></p>
                             <p style="color: red" id="quantity${phone.id}Error"></p>
 
@@ -80,6 +89,18 @@
                         <td>
                             <button onclick="doAjaxPost(${phone.id})" class="btn btn-dark">Add</button>
                         </td>
+                        <sec:authorize access="isAuthenticated() and hasRole('ROLE_SUPPLIER')">
+                            <td style="text-align: center">
+                                <c:if test="${phone.stockRequested != 0}">
+                                    <span>requested: ${phone.stockRequested}</span>
+                                    <br>
+                                    <a class="btn btn-dark"
+                                       href="${pageContext.request.contextPath}/supplier/supply/${phone.id}">
+                                        Supply
+                                    </a>
+                                </c:if>
+                            </td>
+                        </sec:authorize>
                     </tr>
                 </c:forEach>
             </table>

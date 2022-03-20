@@ -3,6 +3,7 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="input" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <tags:template>
     <title>Order confirmation</title>
@@ -77,6 +78,34 @@
                 <p>Phone: ${order.contactPhoneNo}</p>
                 <p>${order.additionalInfo}</p>
             </div>
+        </div>
+
+        <div style="max-width: 400px">
+            <c:if test="${order.status == 'DELIVERED' && comment.message == null}">
+            <h4>Add comment:</h4>
+            <form:form method="post" modelAttribute="request">
+
+                <form:textarea class="form-control mt-2"
+                               placeholder="message"
+                               rows="2"
+                               cols="35"
+                               path="message"/>
+                <span style="color: red">${errors["message"]}</span>
+                <p>
+                    <button type="submit" class="btn btn-success mt-1">Submit</button>
+                </p>
+            </form:form>
+            </c:if>
+
+            <c:if test="${comment.message != null}">
+                <h4>Comment:</h4>
+                <div>
+                    <fmt:parseDate value="${comment.createdDate}" pattern="yyyy-MM-dd'T'HH:mm"/>
+                    <hr class="my-2">
+                    <p style="word-wrap: break-word;">${comment.message}</p>
+
+                </div>
+            </c:if>
         </div>
 
         <div class="clearfix mt-1 mb-3">

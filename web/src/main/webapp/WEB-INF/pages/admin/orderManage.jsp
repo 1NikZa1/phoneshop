@@ -11,10 +11,6 @@
         <hr class="my-2">
 
         <div class="clearfix mt-1">
-            <h3 class="float-start">Thank you for your order</h3>
-        </div>
-
-        <div class="clearfix mt-1">
             <h4 class="float-start">Order number: ${order.id}</h4>
             <h4 class="float-end">Order status: ${order.status}</h4>
         </div>

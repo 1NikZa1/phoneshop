@@ -8,6 +8,7 @@
 
     <http auto-config="true">
         <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/supplier/**" access="hasRole('ROLE_SUPPLIER')"/>
         <csrf disabled="true"/>
         <form-login/>
         <logout/>
@@ -17,6 +18,7 @@
         <authentication-provider>
             <user-service>
                 <user name="admin" password="password" authorities="ROLE_ADMIN"/>
+                <user name="supplier" password="password" authorities="ROLE_SUPPLIER"/>
             </user-service>
         </authentication-provider>
     </authentication-manager>

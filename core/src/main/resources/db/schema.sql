@@ -5,6 +5,11 @@ drop table if exists phones;
 drop table if exists orders;
 drop table if exists order_items;
 drop table if exists comments;
+drop table if exists brands;
+drop table if exists colors;
+drop table if exists device_types;
+drop table if exists operational_systems;
+
 
 create table colors
 (
@@ -13,10 +18,31 @@ create table colors
     UNIQUE (code)
 );
 
+create table brands
+(
+    id   BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50),
+    UNIQUE (name)
+);
+
+create table device_types
+(
+    id   BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50),
+    UNIQUE (name)
+);
+
+create table operational_systems
+(
+    id   BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50),
+    UNIQUE (name)
+);
+
 create table phones
 (
     id                    BIGINT AUTO_INCREMENT primary key,
-    brand                 VARCHAR(50)  NOT NULL,
+    brand                 BIGINT       NOT NULL references brands (id),
     model                 VARCHAR(254) NOT NULL,
     price                 FLOAT,
     displaySizeInches     FLOAT,
@@ -25,8 +51,8 @@ create table phones
     widthMm               FLOAT,
     heightMm              FLOAT,
     announced             DATETIME,
-    deviceType            VARCHAR(50),
-    os                    VARCHAR(100),
+    deviceType            BIGINT references device_types (id),
+    os                    BIGINT references operational_systems (id),
     displayResolution     VARCHAR(50),
     pixelDensity          SMALLINT,
     displayTechnology     VARCHAR(50),
@@ -35,12 +61,13 @@ create table phones
     ramGb                 FLOAT,
     internalStorageGb     FLOAT,
     batteryCapacityMah    SMALLINT,
-    talkTimeHours         FLOAT,
-    standByTimeHours      FLOAT,
     bluetooth             VARCHAR(50),
     positioning           VARCHAR(100),
     imageUrl              VARCHAR(254),
     description           VARCHAR(4096),
+    stock                 SMALLINT,
+    reserved              SMALLINT,
+    stockRequested        SMALLINT,
     CONSTRAINT UC_phone UNIQUE (brand, model)
 );
 
@@ -50,15 +77,6 @@ create table phone2color
     colorId BIGINT,
     CONSTRAINT FK_phone2color_phoneId FOREIGN KEY (phoneId) REFERENCES phones (id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT FK_phone2color_colorId FOREIGN KEY (colorId) REFERENCES colors (id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-create table stocks
-(
-    phoneId  BIGINT   NOT NULL,
-    stock    SMALLINT NOT NULL,
-    reserved SMALLINT NOT NULL,
-    UNIQUE (phoneId),
-    CONSTRAINT FK_stocks_phoneId FOREIGN KEY (phoneId) REFERENCES phones (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 create table orders
@@ -74,22 +92,15 @@ create table orders
     contactPhoneNo  VARCHAR(50) NOT NULL,
     additionalInfo  VARCHAR(512),
     date            TIMESTAMP   NOT NULL,
-    status          VARCHAR(20) NOT NULL
+    status          VARCHAR(20) NOT NULL,
+    review          VARCHAR(512),
+    reviewDate      TIMESTAMP
 );
 
 create table order_items
 (
     id       BIGINT auto_increment PRIMARY KEY,
-    phoneId  BIGINT  NOT NULL,
-    orderId  BIGINT  NOT NULL,
+    phoneId  BIGINT  NOT NULL references phones (id),
+    orderId  BIGINT  NOT NULL references orders (id),
     quantity INTEGER NOT NULL
-);
-
-create table comments
-(
-    id       BIGINT auto_increment PRIMARY KEY,
-    phoneId  BIGINT       NOT NULL,
-    username VARCHAR(50)  NOT NULL,
-    message  VARCHAR(512) NOT NULL,
-    date     TIMESTAMP    NOT NULL
 );

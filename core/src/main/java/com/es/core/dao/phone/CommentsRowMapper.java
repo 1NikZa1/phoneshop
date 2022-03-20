@@ -11,12 +11,9 @@ public class CommentsRowMapper implements RowMapper<Comment> {
     @Override
     public Comment mapRow(ResultSet rs, int rowNum) throws SQLException {
         Comment comment = new Comment();
-        Phone phone = new Phone();
-        phone.setId(rs.getLong("phoneId"));
-        comment.setMessage(rs.getString("message"));
-        comment.setUsername(rs.getString("username"));
-        comment.setCreatedDate(rs.getTimestamp("date").toLocalDateTime());
-        comment.setPhone(phone);
+        comment.setMessage(rs.getString("review"));
+        if (rs.getTimestamp("reviewDate") != null)
+            comment.setCreatedDate(rs.getTimestamp("reviewDate").toLocalDateTime());
         return comment;
     }
 }

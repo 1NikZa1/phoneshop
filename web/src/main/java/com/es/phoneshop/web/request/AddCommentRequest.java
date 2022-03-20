@@ -7,21 +7,8 @@ import javax.validation.constraints.Size;
 
 public class AddCommentRequest {
     @NotBlank(message = "The value is required")
-    @Size(max = 50, message = "too long")
-    private String username;
-    @NotBlank(message = "The value is required")
-    @Size(max = 512, message = "too long")
+    @Size(max = 512, message = "length between 5 and 512", min = 5)
     private String message;
-    @NotNull
-    private Long phoneId;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public String getMessage() {
         return message;
@@ -31,11 +18,4 @@ public class AddCommentRequest {
         this.message = message;
     }
 
-    public Long getPhoneId() {
-        return phoneId;
-    }
-
-    public void setPhoneId(Long phoneId) {
-        this.phoneId = phoneId;
-    }
 }

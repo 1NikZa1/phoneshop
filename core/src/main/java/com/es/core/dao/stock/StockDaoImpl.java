@@ -12,12 +12,10 @@ import java.util.Optional;
 
 @Component
 public class StockDaoImpl implements StockDao {
-    private static final String STOCK_BY_PHONE_ID = "SELECT * FROM stocks " +
-            "WHERE phoneId = ?";
-    private static final String INSERT_STOCK = "INSERT INTO stocks (phoneId, stock, reserved) " +
-            "VALUES (:phoneId, :stock, :reserved)";
-    private static final String UPDATE_STOCK = "UPDATE stocks SET stock = :stock, reserved = :reserved " +
-            "WHERE phoneId = :phoneId";
+    private static final String STOCK_BY_PHONE_ID = "SELECT id, stock, reserved FROM phones " +
+            "WHERE id = ?";
+    private static final String UPDATE_STOCK = "UPDATE phones SET stock = :stock, reserved = :reserved " +
+            "WHERE id = :phoneId";
 
     @Resource
     private JdbcTemplate jdbcTemplate;
@@ -35,20 +33,6 @@ public class StockDaoImpl implements StockDao {
 
     @Override
     public void save(Stock stock) {
-        Optional<Stock> stockOptional = get(stock.getPhone().getId());
-        if (!stockOptional.isPresent()) {
-            insert(stock);
-        } else {
-            update(stock);
-        }
-    }
-
-    private void insert(Stock stock) {
-        SqlParameterSource namedParams = getSqlParameterSource(stock);
-        namedParameterJdbcTemplate.update(INSERT_STOCK, namedParams);
-    }
-
-    private void update(Stock stock) {
         SqlParameterSource namedParams = getSqlParameterSource(stock);
         namedParameterJdbcTemplate.update(UPDATE_STOCK, namedParams);
     }

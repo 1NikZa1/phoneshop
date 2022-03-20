@@ -92,6 +92,7 @@
                         <tags:orderFormRow label="Last name" name="lastName" errors="${errors}"/>
                         <tags:orderFormRow label="Address" name="deliveryAddress" errors="${errors}"/>
                         <tags:orderFormRow label="Phone" name="contactPhoneNo" errors="${errors}"/>
+
                         <label>
                             <form:textarea class="form-control mt-2"
                                            placeholder="Additional info"
