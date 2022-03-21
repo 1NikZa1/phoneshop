@@ -2,6 +2,7 @@ package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.exception.OutOfStockException;
 import com.es.core.model.order.Order;
+import com.es.core.model.user.User;
 import com.es.core.service.cart.CartService;
 import com.es.core.service.order.OrderService;
 import com.es.phoneshop.web.request.PlaceOrderRequest;
@@ -50,14 +51,19 @@ public class OrderPageController {
         }
 
         Order order = orderService.createOrder(cartService.getCart());
+        User user = orderService.getUserByContactPhoneNo(request.getContactPhoneNo()).orElse(new User());
 
         if (order.getOrderItems().isEmpty()) {
             return "order";
         }
 
+
+        populateUser(user, request);
         populateOrder(order, request);
 
         try {
+            orderService.saveUser(user);
+            order.setUser(user.getId());
             orderService.placeOrder(order);
             cartService.clear();
         } catch (OutOfStockException ex) {
@@ -70,10 +76,13 @@ public class OrderPageController {
     }
 
     private void populateOrder(Order order, PlaceOrderRequest request) {
-        order.setFirstName(request.getFirstName());
-        order.setLastName(request.getLastName());
         order.setDeliveryAddress(request.getDeliveryAddress());
-        order.setContactPhoneNo(request.getContactPhoneNo());
         order.setAdditionalInfo(request.getAdditionalInfo());
+    }
+
+    private void populateUser(User user, PlaceOrderRequest request) {
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setContactPhoneNo(request.getContactPhoneNo());
     }
 }

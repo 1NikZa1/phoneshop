@@ -4,11 +4,13 @@ drop table if exists stocks;
 drop table if exists phones;
 drop table if exists orders;
 drop table if exists order_items;
-drop table if exists comments;
 drop table if exists brands;
 drop table if exists colors;
 drop table if exists device_types;
 drop table if exists operational_systems;
+drop table if exists users;
+drop table if exists order2user;
+
 
 
 create table colors
@@ -79,6 +81,15 @@ create table phone2color
     CONSTRAINT FK_phone2color_colorId FOREIGN KEY (colorId) REFERENCES colors (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+create table users
+(
+    id             BIGINT auto_increment PRIMARY KEY,
+    firstName      VARCHAR(50) NOT NULL,
+    lastName       VARCHAR(50) NOT NULL,
+    contactPhoneNo VARCHAR(50) NOT NULL,
+    UNIQUE (contactPhoneNo)
+);
+
 create table orders
 (
     id              BIGINT auto_increment PRIMARY KEY,
@@ -86,21 +97,27 @@ create table orders
     subtotal        DOUBLE      NOT NULL,
     deliveryPrice   DOUBLE      NOT NULL,
     totalPrice      DOUBLE      NOT NULL,
-    firstName       VARCHAR(50) NOT NULL,
-    lastName        VARCHAR(50) NOT NULL,
     deliveryAddress VARCHAR(50) NOT NULL,
-    contactPhoneNo  VARCHAR(50) NOT NULL,
     additionalInfo  VARCHAR(512),
     date            TIMESTAMP   NOT NULL,
     status          VARCHAR(20) NOT NULL,
     review          VARCHAR(512),
-    reviewDate      TIMESTAMP
+    reviewDate      TIMESTAMP,
+    user            BIGINT      NOT NULL references users (id),
+);
+
+create table order2user
+(
+    `order` BIGINT,
+    user BIGINT,
+    CONSTRAINT FK_order2user_order FOREIGN KEY (`order`) REFERENCES orders (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT FK_order2user_user FOREIGN KEY (user) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 create table order_items
 (
     id       BIGINT auto_increment PRIMARY KEY,
-    phoneId  BIGINT  NOT NULL references phones (id),
-    orderId  BIGINT  NOT NULL references orders (id),
+    phone  BIGINT  NOT NULL references phones (id),
+    `order`  BIGINT  NOT NULL references orders (id),
     quantity INTEGER NOT NULL
 );

@@ -1,6 +1,7 @@
 package com.es.phoneshop.web.controller.pages.admin;
 
 import com.es.core.exception.NoSuchOrderException;
+import com.es.core.exception.PhoneNotFoundException;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderStatus;
 import com.es.core.service.order.OrderService;
@@ -24,6 +25,7 @@ public class OrderManagePageController {
     public String getOrderManagePage(@PathVariable("orderId") Long orderId, Model model) {
         Order order = orderService.getOrderById(orderId).orElseThrow(NoSuchOrderException::new);
         model.addAttribute("order", order);
+        model.addAttribute("user", orderService.getUserById(order.getUser()).orElseThrow(PhoneNotFoundException::new));
         return "admin/orderManage";
     }
 

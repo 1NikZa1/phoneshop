@@ -4,7 +4,7 @@
 <%@ taglib prefix="input" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <tags:template>
-    <title>Reviews</title>
+    <title>Users</title>
     <div class="container mt-3">
         <tags:header cartButtonIsVisible="false"/>
         <hr class="my-2">
@@ -13,20 +13,20 @@
             <table class="table table-bordered table-striped table-sm table-hover">
                 <thead class="table-dark">
                 <tr>
-                    <th>Name</th>
-                    <th>Message</th>
-                    <th>Date</th>
+                    <th>Phone number</th>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
                 </tr>
                 </thead>
-                <c:forEach var="r" items="${reviews}" varStatus="loop">
+                <c:forEach var="user" items="${users}" varStatus="loop">
                     <tr>
                         <td>
-                            ${users[loop.index].firstName} ${users[loop.index].lastName.charAt(0)}.
+                            <a href="${pageContext.request.contextPath}/admin/users/${user.id}">
+                                    ${user.contactPhoneNo}
+                            </a>
                         </td>
-                        <td>${r.message}</td>
-                        <td><fmt:parseDate value="${r.createdDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
-                            <fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${parsedDateTime}" /></td>
-
+                        <td>${user.firstName}</td>
+                        <td>${user.lastName}</td>
                     </tr>
                 </c:forEach>
             </table>

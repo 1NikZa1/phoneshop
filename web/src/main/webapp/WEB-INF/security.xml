@@ -12,6 +12,9 @@
         <csrf disabled="true"/>
         <form-login/>
         <logout/>
+        <headers>
+            <frame-options policy="SAMEORIGIN"/>
+        </headers>
     </http>
 
     <authentication-manager>

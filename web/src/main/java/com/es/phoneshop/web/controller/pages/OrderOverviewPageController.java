@@ -3,6 +3,7 @@ package com.es.phoneshop.web.controller.pages;
 import com.es.core.exception.NoSuchOrderException;
 import com.es.core.model.order.Order;
 import com.es.core.model.phone.Comment;
+import com.es.core.model.user.User;
 import com.es.core.service.order.CommentService;
 import com.es.core.service.order.OrderService;
 import com.es.phoneshop.web.request.AddCommentRequest;
@@ -34,6 +35,7 @@ public class OrderOverviewPageController {
     public String getOrderOverview(@PathVariable("secureId") String secureId,
                                    Model model) {
         Order order = orderService.getOrderBySecureId(secureId).orElseThrow(NoSuchOrderException::new);
+        User user = orderService.getUserById(order.getUser()).orElseThrow(NoSuchOrderException::new);
         Comment comment = commentService.getCommentForOrder(order.getId());
         if (comment!=null){
             model.addAttribute("comment", comment);
@@ -42,6 +44,8 @@ public class OrderOverviewPageController {
             model.addAttribute("request", new AddCommentRequest());
         }
         model.addAttribute("order", order);
+        model.addAttribute("user", user);
+
         return "orderOverview";
     }
 

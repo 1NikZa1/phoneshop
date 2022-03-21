@@ -1,12 +1,6 @@
 package com.es.phoneshop.web.request;
 
-import com.es.core.model.phone.Color;
-import org.hibernate.validator.constraints.NotBlank;
-
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-import java.util.HashSet;
-import java.util.Set;
 
 public class SupplyPhoneRequest {
     private Long id;

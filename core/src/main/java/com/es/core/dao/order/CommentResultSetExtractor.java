@@ -1,8 +1,6 @@
 package com.es.core.dao.order;
 
 import com.es.core.model.phone.Comment;
-import com.es.core.model.phone.Phone;
-import com.es.core.model.stock.Stock;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 

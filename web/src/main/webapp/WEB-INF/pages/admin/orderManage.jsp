@@ -68,10 +68,10 @@
                 </tr>
             </table>
             <div class="clearfix">
-                <p>First name: ${order.firstName}</p>
-                <p>Last name: ${order.lastName}</p>
+                <p>First name: ${user.firstName}</p>
+                <p>Last name: ${user.lastName}</p>
                 <p>Address: ${order.deliveryAddress}</p>
-                <p>Phone: ${order.contactPhoneNo}</p>
+                <p>Phone: ${user.contactPhoneNo}</p>
                 <p>${order.additionalInfo}</p>
             </div>
         </div>

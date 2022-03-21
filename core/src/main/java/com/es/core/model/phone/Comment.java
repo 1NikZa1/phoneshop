@@ -6,6 +6,7 @@ public class Comment {
     private Long id;
     private String message;
     private LocalDateTime createdDate;
+    private Long user;
 
     public String getMessage() {
         return message;
@@ -29,5 +30,13 @@ public class Comment {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getUser() {
+        return user;
+    }
+
+    public void setUser(Long user) {
+        this.user = user;
     }
 }

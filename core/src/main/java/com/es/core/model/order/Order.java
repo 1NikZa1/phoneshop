@@ -13,14 +13,14 @@ public class Order {
     private BigDecimal deliveryPrice;
     private BigDecimal totalPrice;
 
-    private String firstName;
-    private String lastName;
     private String deliveryAddress;
-    private String contactPhoneNo;
+
     private String additionalInfo;
 
     private OrderStatus status;
     private LocalDateTime date;
+
+    private Long user;
 
     public Long getId() {
         return id;
@@ -70,36 +70,12 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
     public String getDeliveryAddress() {
         return deliveryAddress;
     }
 
     public void setDeliveryAddress(String deliveryAddress) {
         this.deliveryAddress = deliveryAddress;
-    }
-
-    public String getContactPhoneNo() {
-        return contactPhoneNo;
-    }
-
-    public void setContactPhoneNo(String contactPhoneNo) {
-        this.contactPhoneNo = contactPhoneNo;
     }
 
     public OrderStatus getStatus() {
@@ -124,5 +100,13 @@ public class Order {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    public Long getUser() {
+        return user;
+    }
+
+    public void setUser(Long user) {
+        this.user = user;
     }
 }
