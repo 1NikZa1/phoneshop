@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="input" uri="http://www.springframework.org/tags/form" %>
@@ -20,7 +20,7 @@
         </div>
 
         <div class="clearfix">
-            <table class="table table-borderless table-striped table-sm table-hover">
+            <table id="my-table" class="table table-borderless table-striped table-sm table-hover">
                 <thead class="table-dark">
                 <tr>
                     <th>Brand</th>
@@ -71,7 +71,7 @@
                     <td>$ ${order.totalPrice.intValue()}</td>
                 </tr>
             </table>
-            <div class="clearfix">
+            <div class="clearfix container" id="content">
                 <p>First name: ${user.firstName}</p>
                 <p>Last name: ${user.lastName}</p>
                 <p>Address: ${order.deliveryAddress}</p>
@@ -82,19 +82,19 @@
 
         <div style="max-width: 400px">
             <c:if test="${order.status == 'DELIVERED' && comment.message == null}">
-            <h4>Add comment:</h4>
-            <form:form method="post" modelAttribute="request">
+                <h4>Add comment:</h4>
+                <form:form method="post" modelAttribute="request">
 
-                <form:textarea class="form-control mt-2"
-                               placeholder="message"
-                               rows="2"
-                               cols="35"
-                               path="message"/>
-                <span style="color: red">${errors["message"]}</span>
-                <p>
-                    <button type="submit" class="btn btn-success mt-1">Submit</button>
-                </p>
-            </form:form>
+                    <form:textarea class="form-control mt-2"
+                                   placeholder="message"
+                                   rows="2"
+                                   cols="35"
+                                   path="message"/>
+                    <span style="color: red">${errors["message"]}</span>
+                    <p>
+                        <button type="submit" class="btn btn-success mt-1">Submit</button>
+                    </p>
+                </form:form>
             </c:if>
 
             <c:if test="${comment.message != null}">
@@ -107,11 +107,38 @@
                 </div>
             </c:if>
         </div>
-
         <div class="clearfix mt-1 mb-3">
             <a href="${pageContext.request.contextPath}/productList"
                class="btn btn-success float-start">Back to shopping</a>
+            &nbsp;
+            <a href="${pageContext.request.contextPath}/orderOverview/${order.secureId}/invoice"
+               class="btn btn-success">Invoice</a>
         </div>
+
+
+        <script>
+            $('#cmd').click(function () {
+                var doc = new jsPDF({orientation: "p", lineHeight: 1});
+
+                var elementHandler = {
+                    '#my-table': function (element, renderer) {
+                        return true;
+                    }
+                };
+                doc.autoTable({html: '#my-table'})
+
+                let finalY = doc.lastAutoTable.finalY;
+
+                doc.fromHTML($('#content').html(), 15, finalY, {
+                    'width': 200,
+                    'elementHandlers': elementHandler
+                });
+
+                doc.save("info");
+            });
+
+            // This code is collected but useful, click below to jsfiddle link.
+        </script>
 
     </div>
 </tags:template>

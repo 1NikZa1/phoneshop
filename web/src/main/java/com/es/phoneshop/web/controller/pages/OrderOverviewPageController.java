@@ -49,6 +49,24 @@ public class OrderOverviewPageController {
         return "orderOverview";
     }
 
+    @GetMapping("/{secureId}/invoice")
+    public String getInvoice(@PathVariable("secureId") String secureId,
+                             Model model) {
+        Order order = orderService.getOrderBySecureId(secureId).orElseThrow(NoSuchOrderException::new);
+        User user = orderService.getUserById(order.getUser()).orElseThrow(NoSuchOrderException::new);
+        Comment comment = commentService.getCommentForOrder(order.getId());
+        if (comment!=null){
+            model.addAttribute("comment", comment);
+        }
+        if (!model.containsAttribute("request")) {
+            model.addAttribute("request", new AddCommentRequest());
+        }
+        model.addAttribute("order", order);
+        model.addAttribute("user", user);
+
+        return "invoice";
+    }
+
     @PostMapping("/{secureId}")
     public String addComment(@PathVariable("secureId") String secureId,
                              @Valid @ModelAttribute AddCommentRequest request,

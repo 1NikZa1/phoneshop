@@ -40,6 +40,9 @@
         <constructor-arg ref="phoneDaoImpl"/>
     </bean>
 
+    <bean id="iosuDao" class="com.es.core.dao.iosu.IosuDaoImpl">
+    </bean>
+
     <bean id="cartService" class="com.es.core.service.cart.CartServiceImpl">
         <constructor-arg ref="phoneDaoImpl"/>
         <constructor-arg ref="cart"/>

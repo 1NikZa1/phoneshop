@@ -22,6 +22,7 @@
                     <li><a class="dropdown-item" href="${pageContext.request.contextPath}/admin/brands">Manage brands</a></li>
                     <li><a class="dropdown-item" href="${pageContext.request.contextPath}/admin/colors">Manage colors</a></li>
                     <li><a class="dropdown-item" href="${pageContext.request.contextPath}/admin/users">Manage users</a></li>
+                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/admin/stat">Sales statistics</a></li>
                     <li><a class="dropdown-item" href="${pageContext.request.contextPath}/admin/addPhone">Add phone</a></li>
                 </ul>
         </sec:authorize>
