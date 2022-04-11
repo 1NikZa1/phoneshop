@@ -136,7 +136,7 @@
                     <tr>
                         <td>
                             Delivery address:<br/>
-                            ${order.deliveryAddress}<br/
+                            ${order.deliveryAddress}<br/>
                         </td>
 
                         <td>
