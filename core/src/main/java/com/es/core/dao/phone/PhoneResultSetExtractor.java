@@ -39,7 +39,7 @@ public class PhoneResultSetExtractor implements ResultSetExtractor<List<Phone>> 
 
     private void setPhoneProps(Phone phone, ResultSet resultSet) throws SQLException {
         phone.setId(resultSet.getLong("id"));
-        phone.setBrand(resultSet.getString("brand"));
+        phone.setBrand(resultSet.getString("brandName"));
         phone.setModel(resultSet.getString("model"));
         phone.setPrice(resultSet.getBigDecimal("price"));
         phone.setDisplaySizeInches(resultSet.getBigDecimal("displaySizeInches"));
@@ -48,8 +48,8 @@ public class PhoneResultSetExtractor implements ResultSetExtractor<List<Phone>> 
         phone.setWidthMm(resultSet.getBigDecimal("widthMm"));
         phone.setHeightMm(resultSet.getBigDecimal("heightMm"));
         phone.setAnnounced(resultSet.getDate("announced"));
-        phone.setDeviceType(resultSet.getString("deviceType"));
-        phone.setOs(resultSet.getString("os"));
+        phone.setDeviceType(resultSet.getString("deviceTypeName"));
+        phone.setOs(resultSet.getString("osName"));
         phone.setDisplayResolution(resultSet.getString("displayResolution"));
         phone.setPixelDensity(resultSet.getInt("pixelDensity"));
         phone.setDisplayTechnology(resultSet.getString("displayTechnology"));
@@ -58,11 +58,12 @@ public class PhoneResultSetExtractor implements ResultSetExtractor<List<Phone>> 
         phone.setRamGb(resultSet.getBigDecimal("ramGb"));
         phone.setInternalStorageGb(resultSet.getBigDecimal("internalStorageGb"));
         phone.setBatteryCapacityMah(resultSet.getInt("batteryCapacityMah"));
-        phone.setTalkTimeHours(resultSet.getBigDecimal("talkTimeHours"));
-        phone.setStandByTimeHours(resultSet.getBigDecimal("standByTimeHours"));
         phone.setBluetooth(resultSet.getString("bluetooth"));
         phone.setPositioning(resultSet.getString("positioning"));
         phone.setImageUrl(resultSet.getString("imageUrl"));
         phone.setDescription(resultSet.getString("description"));
+        phone.setStock(resultSet.getInt("stock"));
+        phone.setReserved(resultSet.getInt("reserved"));
+        phone.setStockRequested(resultSet.getInt("stockRequested"));
     }
 }

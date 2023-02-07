@@ -12,8 +12,15 @@
     <bean name="addToCartRequestValidator" class="com.es.phoneshop.web.validation.AddToCartRequestValidator">
     </bean>
 
+    <bean name="colorEditor" class="com.es.phoneshop.web.controller.pages.admin.ColorEditor">
+    </bean>
+
     <bean name="cartItemsUpdateRequestValidator"
           class="com.es.phoneshop.web.validation.CartItemsUpdateRequestValidator">
+    </bean>
+
+    <bean name="quickAddRequestValidator"
+          class="com.es.phoneshop.web.validation.QuickAddRequestValidator">
     </bean>
 
     <bean id="validator"

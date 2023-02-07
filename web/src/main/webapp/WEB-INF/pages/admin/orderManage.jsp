@@ -11,10 +11,6 @@
         <hr class="my-2">
 
         <div class="clearfix mt-1">
-            <h3 class="float-start">Thank you for your order</h3>
-        </div>
-
-        <div class="clearfix mt-1">
             <h4 class="float-start">Order number: ${order.id}</h4>
             <h4 class="float-end">Order status: ${order.status}</h4>
         </div>
@@ -72,10 +68,10 @@
                 </tr>
             </table>
             <div class="clearfix">
-                <p>First name: ${order.firstName}</p>
-                <p>Last name: ${order.lastName}</p>
+                <p>First name: ${user.firstName}</p>
+                <p>Last name: ${user.lastName}</p>
                 <p>Address: ${order.deliveryAddress}</p>
-                <p>Phone: ${order.contactPhoneNo}</p>
+                <p>Phone: ${user.contactPhoneNo}</p>
                 <p>${order.additionalInfo}</p>
             </div>
         </div>

@@ -34,10 +34,7 @@ public class OrderDaoImplTest {
         order.setSubtotal(BigDecimal.ONE);
         order.setDeliveryPrice(BigDecimal.ZERO);
         order.setTotalPrice(BigDecimal.ONE);
-        order.setFirstName("firstName");
-        order.setLastName("lastName");
         order.setDeliveryAddress("deliveryAddress");
-        order.setContactPhoneNo("contactPhoneNo");
         order.setAdditionalInfo("additionalInfo");
         order.setDate(LocalDateTime.now());
         order.setStatus(OrderStatus.NEW);

@@ -4,6 +4,14 @@ drop table if exists stocks;
 drop table if exists phones;
 drop table if exists orders;
 drop table if exists order_items;
+drop table if exists brands;
+drop table if exists colors;
+drop table if exists device_types;
+drop table if exists operational_systems;
+drop table if exists users;
+drop table if exists order2user;
+
+
 
 create table colors
 (
@@ -12,10 +20,31 @@ create table colors
     UNIQUE (code)
 );
 
+create table brands
+(
+    id   BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50),
+    UNIQUE (name)
+);
+
+create table device_types
+(
+    id   BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50),
+    UNIQUE (name)
+);
+
+create table operational_systems
+(
+    id   BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50),
+    UNIQUE (name)
+);
+
 create table phones
 (
     id                    BIGINT AUTO_INCREMENT primary key,
-    brand                 VARCHAR(50)  NOT NULL,
+    brand                 BIGINT       NOT NULL references brands (id),
     model                 VARCHAR(254) NOT NULL,
     price                 FLOAT,
     displaySizeInches     FLOAT,
@@ -24,8 +53,8 @@ create table phones
     widthMm               FLOAT,
     heightMm              FLOAT,
     announced             DATETIME,
-    deviceType            VARCHAR(50),
-    os                    VARCHAR(100),
+    deviceType            BIGINT references device_types (id),
+    os                    BIGINT references operational_systems (id),
     displayResolution     VARCHAR(50),
     pixelDensity          SMALLINT,
     displayTechnology     VARCHAR(50),
@@ -34,12 +63,13 @@ create table phones
     ramGb                 FLOAT,
     internalStorageGb     FLOAT,
     batteryCapacityMah    SMALLINT,
-    talkTimeHours         FLOAT,
-    standByTimeHours      FLOAT,
     bluetooth             VARCHAR(50),
     positioning           VARCHAR(100),
     imageUrl              VARCHAR(254),
     description           VARCHAR(4096),
+    stock                 SMALLINT,
+    reserved              SMALLINT,
+    stockRequested        SMALLINT,
     CONSTRAINT UC_phone UNIQUE (brand, model)
 );
 
@@ -51,35 +81,43 @@ create table phone2color
     CONSTRAINT FK_phone2color_colorId FOREIGN KEY (colorId) REFERENCES colors (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-create table stocks
+create table users
 (
-    phoneId  BIGINT   NOT NULL,
-    stock    SMALLINT NOT NULL,
-    reserved SMALLINT NOT NULL,
-    UNIQUE (phoneId),
-    CONSTRAINT FK_stocks_phoneId FOREIGN KEY (phoneId) REFERENCES phones (id) ON DELETE CASCADE ON UPDATE CASCADE
+    id             BIGINT auto_increment PRIMARY KEY,
+    firstName      VARCHAR(50) NOT NULL,
+    lastName       VARCHAR(50) NOT NULL,
+    contactPhoneNo VARCHAR(50) NOT NULL,
+    UNIQUE (contactPhoneNo)
 );
 
 create table orders
 (
-    id              BIGINT auto_increment primary key,
+    id              BIGINT auto_increment PRIMARY KEY,
     secureId        VARCHAR(256),
     subtotal        DOUBLE      NOT NULL,
     deliveryPrice   DOUBLE      NOT NULL,
     totalPrice      DOUBLE      NOT NULL,
-    firstName       VARCHAR(50) NOT NULL,
-    lastName        VARCHAR(50) NOT NULL,
     deliveryAddress VARCHAR(50) NOT NULL,
-    contactPhoneNo  VARCHAR(50) NOT NULL,
     additionalInfo  VARCHAR(512),
     date            TIMESTAMP   NOT NULL,
-    status          VARCHAR(20) NOT NULL
+    status          VARCHAR(20) NOT NULL,
+    review          VARCHAR(512),
+    reviewDate      TIMESTAMP,
+    user            BIGINT      NOT NULL references users (id),
+);
+
+create table order2user
+(
+    `order` BIGINT,
+    user BIGINT,
+    CONSTRAINT FK_order2user_order FOREIGN KEY (`order`) REFERENCES orders (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT FK_order2user_user FOREIGN KEY (user) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 create table order_items
 (
-    id       BIGINT auto_increment primary key,
-    phoneId  BIGINT  not null,
-    orderId  BIGINT  not null,
-    quantity INTEGER not null
+    id       BIGINT auto_increment PRIMARY KEY,
+    phone  BIGINT  NOT NULL references phones (id),
+    `order`  BIGINT  NOT NULL references orders (id),
+    quantity INTEGER NOT NULL
 );

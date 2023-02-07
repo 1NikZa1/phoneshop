@@ -18,13 +18,11 @@ public class OrderResultSetExtractor implements ResultSetExtractor<Order> {
             order.setSubtotal(resultSet.getBigDecimal("subtotal"));
             order.setDeliveryPrice(resultSet.getBigDecimal("deliveryPrice"));
             order.setTotalPrice(resultSet.getBigDecimal("totalPrice"));
-            order.setFirstName(resultSet.getString("firstName"));
-            order.setLastName(resultSet.getString("lastName"));
             order.setDeliveryAddress(resultSet.getString("deliveryAddress"));
-            order.setContactPhoneNo(resultSet.getString("contactPhoneNo"));
             order.setAdditionalInfo(resultSet.getString("additionalInfo"));
             order.setStatus(OrderStatus.valueOf(resultSet.getString("status").toUpperCase()));
             order.setDate(resultSet.getTimestamp("date").toLocalDateTime());
+            order.setUser(resultSet.getLong("user"));
         }
         return order;
     }

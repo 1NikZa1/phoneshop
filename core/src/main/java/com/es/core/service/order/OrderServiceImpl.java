@@ -8,6 +8,7 @@ import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
 import com.es.core.model.order.OrderStatus;
 import com.es.core.model.stock.Stock;
+import com.es.core.model.user.User;
 import com.es.core.service.stock.StockService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,6 +74,31 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Optional<Order> getOrderBySecureId(String secureId) {
         return orderDao.getBySecureId(secureId);
+    }
+
+    @Override
+    public Optional<User> getUserByContactPhoneNo(String phoneNo) {
+        return orderDao.getUserByContactPhoneNo(phoneNo);
+    }
+
+    @Override
+    public Optional<User> getUserById(Long userId) {
+        return orderDao.getUserById(userId);
+    }
+
+    @Override
+    public List<Order> getOrdersForUser(Long userId) {
+        return orderDao.getOrdersForUser(userId);
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return orderDao.getAllUsers();
+    }
+
+    @Override
+    public void saveUser(User user) {
+        orderDao.saveUser(user);
     }
 
     @Override
